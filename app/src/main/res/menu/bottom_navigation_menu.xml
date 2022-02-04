@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--    icons for the carrot and the writing a recipe are taken from here: https://www.svgrepo.com/svg/80215/carrot & https://www.svgrepo.com/svg/163525/write-->
+<!--    This guide was followed for creating the icons on the nav bar: https://material.io/components/bottom-navigation/android#using-bottom-navigation  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/MainActivity"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="@string/ic_home"/>
+    <item
+        android:id="@+id/Ingredients"
+        android:enabled="true"
+        android:icon="@drawable/ic_carrot_svgrepo_com"
+        android:title="@string/ic_ingredients" />
+    <item
+        android:id="@+id/FindRecipes"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="@string/ic_search" />
+    <item
+        android:id="@+id/CustomRecipe"
+        android:enabled="true"
+        android:icon="@drawable/ic_write_svgrepo_com"
+        android:title="@string/ic_customRecipe" />
+    <item
+        android:id="@+id/Calendar"
+        android:enabled="true"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/ic_calendar" />
+
+</menu>

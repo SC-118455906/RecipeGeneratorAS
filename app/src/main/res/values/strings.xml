@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">RecipeGenerator</string>
+    <string name="FirstName">First Name</string>
+    <string name="Surname">Surname</string>
+    <string name="Allergens">Allergens</string>
+    <string name="Quantity">Quantity</string>
+    <string name="IngredientName">Ingredient Name</string>
+    <string name="RecipeName">e.g. Turkey Burger</string>
+    <string name="AddIngredientToRecipe">e.g. Lettuce</string>
+    <string name="QuantityOfIngredient">e.g. 100g</string>
+    <string name="ic_ingredients">Ingredients</string>
+    <string name="ic_home">Home</string>
+    <string name="ic_search">Find Recipe</string>
+    <string name="ic_customRecipe">Custom Recipe</string>
+    <string name="ic_calendar">Calendar</string>
+    <string name="CustomerName">Name:</string>
+    <string name="Email">Email Address:</string>
+    <string name="DOB">Date of Birth:</string>
+    <string name="Password">Password:</string>
+    <string name="ConfirmPassword">Confirm Password:</string>
+    <string name="profile">Profile</string>
+    <string name="ingredient_type">Ingredient Type</string>
+</resources>
