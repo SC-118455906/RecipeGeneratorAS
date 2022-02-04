@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     public int CurrentUserID = 1;
 
+    //test commit
     public int getCurrentUserID() {
         return CurrentUserID;
     }
