@@ -4,8 +4,10 @@ package com.example.recipegenerator;
 //and take the code from this tutorial for accessing my database. I had tried many other methods including these tutorials: https://www.edureka.co/community/79202/how-to-use-an-existing-database-with-an-android-application &
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -14,6 +16,7 @@ import android.util.Log;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.User;
+import com.example.recipegenerator.models.UserIngredient;
 
 public class TestAdapter {
 
@@ -60,20 +63,19 @@ public class TestAdapter {
         mDbHelper.close();
     }
 
-    public List<User> getTestData() {
-        List<User> returnUsers = new ArrayList<>();
+    public List<UserIngredient> getTestData() {
+        List<UserIngredient> returnUsers = new ArrayList<>();
+        User currentUser = new User(6, "Dan", "Murphy", "Coeliac");
         try {
-            String sql ="SELECT * FROM USER";
+            String sql ="SELECT INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + currentUser.getID();
             Cursor cursor = mDb.rawQuery(sql, null);
             if(cursor.moveToFirst()){
                 do {
-                    int UserID = cursor.getInt(0);
-                    String Fname = cursor.getString(1);
-                    String Sname = cursor.getString(2);
-                    String Allergens = cursor.getString(3);
+                    String IngredientName = cursor.getString(0);
+                    int IngredientID = cursor.getInt(1);
 
-                    User user = new User(UserID, Fname, Sname, Allergens);
-                    returnUsers.add(user);
+//                    UserIngredient userIngredients = new UserIngredient(UserID, IngredientID, quantity);
+//                    returnUsers.add(userIngredients);
 
                 } while(cursor.moveToNext());
             } else {
@@ -88,21 +90,21 @@ public class TestAdapter {
     }
 
 
-//    public Cursor getIngredientData() {
-//        try {
-//            String sql ="SELECT * FROM INGREDIENTS";
-//            Cursor cursor = mDb.rawQuery(sql, null);
-//            if (cursor != null) {
-//
-//            }
-//            return mCur;
-//        } catch (SQLException mSQLException) {
-//            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
-//            throw mSQLException;
-//        }
-//    }
+    public Cursor getUserIngredientData() {
+        try {
+            String sql ="SELECT * FROM INGREDIENTS";
+            Cursor cursor = mDb.rawQuery(sql, null);
+            if (cursor != null) {
 
-    public Ingredient getIngredientByName(String name, int userID, int quantity){
+            }
+            return cursor;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Ingredient getIngredientByName(String name, int quantity){
         Ingredient ingredient = null;
         try {
             String getIngredientFromDBSQL = "SELECT INGREDIENTS.INGREDIENT_ID, INGREDIENTS.NAME, FOODTYPE.TYPE FROM INGREDIENTS, FOODTYPE WHERE INGREDIENTS.TYPE = FOODTYPE.TYPE_ID AND UPPER(INGREDIENTS.NAME) = '" + name + "'";
@@ -120,15 +122,39 @@ public class TestAdapter {
 
                 }
             }
-
-            String writeUserIngToDatabase = "INSERT INTO USER_INGREDIENTS(USER_ID, INGREDIENT_ID, QUANTITY) VALUES (" + userID + ", " + ingredient.getIngredient_ID() + ", " + quantity + ")";
-            mDb.execSQL(writeUserIngToDatabase);
-            Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
         } catch (SQLException mSQLException) {
             Log.e(TAG, "getTestData >>"+ mSQLException.toString());
             throw mSQLException;
         }
 
         return ingredient;
+    }
+
+    public void writeUser_Ingredients(Ingredient ingredient, int userID, int quantity){
+        mDb = mDbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("USER_ID", userID);
+        contentValues.put("INGREDIENT_ID", ingredient.getIngredient_ID());
+        contentValues.put("QUANTITY", quantity);
+
+        long result = mDb.insert("USER_INGREDIENTS", null, contentValues);
+
+        if(result == -1){
+            Log.println(Log.INFO, TAG, "didn't write users ingredient to db");
+        } else {
+            Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
+        }
+
+//        String writeUserIngToDatabase = "INSERT INTO USER_INGREDIENTS(USER_ID, INGREDIENT_ID, QUANTITY) VALUES (" + userID + ", " + ingredient.getIngredient_ID() + ", " + quantity + ")";
+//        executeDatabaseQueryToWriteToUserIngredients(writeUserIngToDatabase);
+    }
+
+    private void executeDatabaseQueryToWriteToUserIngredients(String writeUserIngToDatabase) {
+        try {
+            mDb.execSQL(writeUserIngToDatabase);
+            Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
+        } catch (SQLException e){
+            Log.println(Log.ERROR, TAG, "Error writing to User_Ingredients ==> " + e);
+        }
     }
 }

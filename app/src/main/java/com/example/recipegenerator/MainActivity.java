@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.User;
+import com.example.recipegenerator.models.UserIngredient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     public int CurrentUserID = 1;
 
-    //test commit
     public int getCurrentUserID() {
         return CurrentUserID;
     }
@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
 //        TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
 //        mDbHelper.createDatabase();
 //        mDbHelper.open();
-//        Cursor testData = mDbHelper.getIngredientData();
 //
 //        mDbHelper.close();
 
+//        showAllUsersInListView();
 
 //        btn_Add = findViewById(R.id.btn_Add);
 //        btn_ViewAll = findViewById(R.id.btn_ViewAll);
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 //        showTablesInDatabase();
 //        showAllUsersInListView();
 //        showIngredientsInListView();
+
         //listeners
 //        btn_Add.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        btn_ViewAll.setOnClickListener((v) -> {
 //
-//            showAllUsersInListView();
+
 //        });
 
         btn_GoToIngredients.setOnClickListener((v) -> {
@@ -131,17 +132,17 @@ public class MainActivity extends AppCompatActivity {
 //        lst_Users.setAdapter(arrayAdapter);
 //    }
 //
-//    private void showAllUsersInListView() {
-//        DatabaseHelper dbHelper = new DatabaseHelper(MainActivity.this);
-//        arrayAdapter = new ArrayAdapter<User>(MainActivity.this,
-//                android.R.layout.simple_list_item_1,
-//                dbHelper.getAllUsers());
-//        lst_Users.setAdapter(arrayAdapter);
-//    }
+    private void showAllUsersInListView() {
+        TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
+        mDbHelper.open();
+        arrayAdapter = new ArrayAdapter<UserIngredient>(MainActivity.this,
+                android.R.layout.simple_list_item_1,
+                mDbHelper.getTestData());
+        lst_Users.setAdapter(arrayAdapter);
+    }
 
     //code for swapping between activites came from this tutorial: https://learntodroid.com/how-to-switch-between-activities-in-android/
     private void switchActivity(Class _class) {
-        //code for swapping between Activites was taken from this tutorial https://learntodroid.com/how-to-switch-between-activities-in-android/
 //        Intent switchActivityIntent = new Intent(this, Ingredients.class);
         Intent switchActivityIntent = new Intent(this, _class);
         startActivity(switchActivityIntent);
