@@ -85,7 +85,6 @@ public class Ingredients extends AppCompatActivity {
         SQLiteDatabase db = getSqLiteDatabase();
         arrayAdapter = new ArrayAdapter<UserIngredientForList>(Ingredients.this, android.R.layout.simple_list_item_1);
         Cursor cursor = db.rawQuery(getUsersCurrentIngredientsFromDB, null);
-        Cursor cursor2 = db.rawQuery("SELECT TYPE FROM FOODTYPE", null);
 
         addIngredientsToArrayAdapterForIngredientsList(cursor);
 
