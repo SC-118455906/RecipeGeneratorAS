@@ -8,6 +8,11 @@ public class Ingredient {
     public Ingredient() {
     }
 
+    public Ingredient(int ingredient_ID, String name) {
+        Ingredient_ID = ingredient_ID;
+        Name = name;
+    }
+
     public Ingredient(int ingredient_ID, String name, String type) {
         Ingredient_ID = ingredient_ID;
         Name = name;

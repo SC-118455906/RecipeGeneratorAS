@@ -12,6 +12,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+
+//I was able to find this tutorial :https://stackoverflow.com/questions/9109438/how-to-use-an-existing-database-with-an-android-application/9109728#9109728
+//and take the code from this tutorial for accessing my database. I had tried many other methods including these tutorials: https://www.edureka.co/community/79202/how-to-use-an-existing-database-with-an-android-application & https://www.youtube.com/watch?v=9t8VVWebRFM&t=1053s
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = "DataBaseHelper"; // Tag just for the LogCat window

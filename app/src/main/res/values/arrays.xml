@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="measurements">
+        <item>grams (g) </item>
+        <item>millilitres (ml)</item>
+    </string-array>
+</resources>
