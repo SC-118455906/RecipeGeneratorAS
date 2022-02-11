@@ -145,8 +145,6 @@ public class TestAdapter {
             Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
         }
 
-//        String writeUserIngToDatabase = "INSERT INTO USER_INGREDIENTS(USER_ID, INGREDIENT_ID, QUANTITY) VALUES (" + userID + ", " + ingredient.getIngredient_ID() + ", " + quantity + ")";
-//        executeDatabaseQueryToWriteToUserIngredients(writeUserIngToDatabase);
     }
 
     private void executeDatabaseQueryToWriteToUserIngredients(String writeUserIngToDatabase) {
