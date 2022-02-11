@@ -1,7 +1,7 @@
 package com.example.recipegenerator;
 
 //I was able to find this tutorial :https://stackoverflow.com/questions/9109438/how-to-use-an-existing-database-with-an-android-application/9109728#9109728
-//and take the code from this tutorial for accessing my database. I had tried many other methods including these tutorials: https://www.edureka.co/community/79202/how-to-use-an-existing-database-with-an-android-application &
+//and take the code from this tutorial for accessing my database. I had tried many other methods including these tutorials: https://www.edureka.co/community/79202/how-to-use-an-existing-database-with-an-android-application & https://www.youtube.com/watch?v=9t8VVWebRFM&t=1053s
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,7 +65,7 @@ public class TestAdapter {
 
     public List<UserIngredient> getTestData() {
         List<UserIngredient> returnUsers = new ArrayList<>();
-        User currentUser = new User(6, "Dan", "Murphy", "Coeliac");
+        User currentUser = new User(6, "Dan", "Murphy", "Coeliac", null);
         try {
             String sql ="SELECT INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + currentUser.getID();
             Cursor cursor = mDb.rawQuery(sql, null);

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RecipeGenerator</string>
-    <string name="FirstName">First Name</string>
-    <string name="Surname">Surname</string>
+    <string name="FirstName">First Name:</string>
+    <string name="Surname">Surname:</string>
     <string name="Allergens">Allergens</string>
     <string name="Quantity">Quantity</string>
     <string name="IngredientName">Ingredient Name</string>
@@ -20,4 +20,5 @@
     <string name="ConfirmPassword">Confirm Password:</string>
     <string name="profile">Profile</string>
     <string name="ingredient_type">Ingredient Type</string>
+    <string name="RecipeDesc">Recipe Description</string>
 </resources>

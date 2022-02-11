@@ -49,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
 //        mDbHelper.close();
 
 //        showAllUsersInListView();
-
-//        btn_Add = findViewById(R.id.btn_Add);
-//        btn_ViewAll = findViewById(R.id.btn_ViewAll);
         btn_GoToIngredients = findViewById(R.id.btn_GoToIngredients);
         btn_GoToCustomRecipe = findViewById(R.id.btn_GoToCustomRecipe);
         btn_GoToCustomIng = findViewById(R.id.btn_GoToCustomIng);

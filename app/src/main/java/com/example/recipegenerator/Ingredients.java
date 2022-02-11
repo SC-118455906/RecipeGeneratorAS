@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.User;
-import com.example.recipegenerator.models.UserIngredientForList;
+import com.example.recipegenerator.models.IngredientForList;
 
 public class Ingredients extends AppCompatActivity {
 
@@ -24,7 +27,7 @@ public class Ingredients extends AppCompatActivity {
     ListView lst_CurrentIngredients;
     TestAdapter testAdapter;
 
-    User currentUser = new User(6, "Dan", "Murphy", "Coeliac");
+    User currentUser = new User(2, "Dan", "Murphy", "Coeliac", null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +59,46 @@ public class Ingredients extends AppCompatActivity {
             addIngredient(name, userID, quantity);
         });
 
+        lst_CurrentIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 IngredientForList ingredient = (IngredientForList) parent.getItemAtPosition(position);
+                 deleteItem(currentUser.getID(), ingredient.getIngredientID());
+                 getUsersCurrentIngredients(currentUser.getID());
+            }
+        });
+
         getUsersCurrentIngredients(currentUser.getID());
     }
 
     private void addIngredient(String name, int userID, int quantity) {
         Ingredient ingredient = testAdapter.getIngredientByName(name, quantity);
-        addIngredientToList(ingredient);
+//        addIngredientToList(ingredient);
         testAdapter.writeUser_Ingredients(ingredient, userID, quantity);
+        getUsersCurrentIngredients(currentUser.getID());
     }
 
-    private void addIngredientToList(Ingredient ingredient) {
-        arrayAdapter = new ArrayAdapter<Ingredient>(Ingredients.this, android.R.layout.simple_list_item_1);
-        arrayAdapter.add(ingredient);
-        lst_CurrentIngredients.setAdapter(arrayAdapter);
-    }
+//    private void addIngredientToList(Ingredient ingredient) {
+//        arrayAdapter = new ArrayAdapter<Ingredient>(Ingredients.this, android.R.layout.simple_list_item_1);
+//        arrayAdapter.add(ingredient);
+//        lst_CurrentIngredients.setAdapter(arrayAdapter);
+//    }
 
+
+    private void deleteItem(int userID, int ingredientID){
+        SQLiteDatabase db = getSqLiteDatabase(true);
+        String sql = "DELETE FROM USER_INGREDIENTS WHERE USER_ID = " + userID + " AND INGREDIENT_ID = " + ingredientID;
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if(cursor.moveToFirst()){
+            Toast.makeText(this, "Successfully deleted item", Toast.LENGTH_SHORT).show();
+        } else{
+            Toast.makeText(this, "Could not delete item. Please try again", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+    }
 
     private void switchActivity(Class _class) {
         testAdapter.close();
@@ -80,10 +108,10 @@ public class Ingredients extends AppCompatActivity {
     }
 
     private void getUsersCurrentIngredients(int userID){
-        String getUsersCurrentIngredientsFromDB = "SELECT INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + userID;
+        String getUsersCurrentIngredientsFromDB = "SELECT INGREDIENTS.INGREDIENT_ID, INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + userID;
 
-        SQLiteDatabase db = getSqLiteDatabase();
-        arrayAdapter = new ArrayAdapter<UserIngredientForList>(Ingredients.this, android.R.layout.simple_list_item_1);
+        SQLiteDatabase db = getSqLiteDatabase(false);
+        arrayAdapter = new ArrayAdapter<IngredientForList>(Ingredients.this, android.R.layout.simple_list_item_1);
         Cursor cursor = db.rawQuery(getUsersCurrentIngredientsFromDB, null);
 
         addIngredientsToArrayAdapterForIngredientsList(cursor);
@@ -91,22 +119,27 @@ public class Ingredients extends AppCompatActivity {
         lst_CurrentIngredients.setAdapter(arrayAdapter);
     }
 
-    private SQLiteDatabase getSqLiteDatabase() {
+    private SQLiteDatabase getSqLiteDatabase(boolean writable) {
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(Ingredients.this);
-        db = dbHelper.getReadableDatabase();
+        if(writable){
+            db = dbHelper.getWritableDatabase();
+        } else {
+            db = dbHelper.getReadableDatabase();
+        }
         return db;
     }
-
     private void addIngredientsToArrayAdapterForIngredientsList(Cursor cursor) {
+        int ingredientID;
         String ingredientName;
         int ingredientQuantity;
         if(cursor.moveToFirst()){
             do{
-                ingredientName = cursor.getString(0);
-                ingredientQuantity = cursor.getInt(1);
+                ingredientID = cursor.getInt(0);
+                ingredientName = cursor.getString(1);
+                ingredientQuantity = cursor.getInt(2);
 
-                UserIngredientForList ingredientForList = new UserIngredientForList(ingredientName, ingredientQuantity);
+                IngredientForList ingredientForList = new IngredientForList(ingredientID, ingredientName, ingredientQuantity);
                 arrayAdapter.add(ingredientForList);
 
             } while(cursor.moveToNext());
