@@ -21,7 +21,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     //references to controls in the layout
-    Button btn_ViewAll, btn_Add, btn_GoToIngredients, btn_GoToCustomRecipe, btn_GoToCustomIng;
+    Button btn_ViewAll, btn_Add, btn_GoToIngredients, btn_GoToCustomRecipe, btn_GoToCustomIng, btn_GoToRecipes;
     EditText et_Fname, et_Sname, et_Allergens;
     View img_Profile;
     ListView lst_Users;
@@ -52,11 +52,9 @@ public class MainActivity extends AppCompatActivity {
         btn_GoToIngredients = findViewById(R.id.btn_GoToIngredients);
         btn_GoToCustomRecipe = findViewById(R.id.btn_GoToCustomRecipe);
         btn_GoToCustomIng = findViewById(R.id.btn_GoToCustomIng);
+        btn_GoToRecipes = findViewById(R.id.btn_GoToRecipes);
         img_Profile = findViewById(R.id.img_Profile);
-//        et_Fname = findViewById(R.id.et_Fname);
-//        et_Sname = findViewById(R.id.et_Sname);
         et_Allergens = findViewById(R.id.et_Allergens);
-        lst_Users = findViewById(R.id.lst_Users);
         BottomNavigationView bottomNavigationView = new BottomNavigationView(MainActivity.this);
 
 
@@ -113,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
 
         btn_GoToCustomIng.setOnClickListener((v)->{
             switchActivity(CustomIngredient.class);
+        });
+
+        btn_GoToRecipes.setOnClickListener((v)->{
+            switchActivity(Recipes.class);
         });
 
         img_Profile.setOnClickListener((v -> {

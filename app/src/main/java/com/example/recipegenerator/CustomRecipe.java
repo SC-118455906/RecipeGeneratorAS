@@ -6,19 +6,16 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.IngredientForList;
 import com.example.recipegenerator.models.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CustomRecipe extends AppCompatActivity {
@@ -38,7 +35,7 @@ public class CustomRecipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_recipe);
 
-        btn_AddRecipe = findViewById(R.id.btn_AddRecipe);
+        btn_AddRecipe = findViewById(R.id.btn_SaveRecipe);
         et_RecipeName = findViewById(R.id.et_RecipeName);
         et_AddIngredientToRecipe = findViewById(R.id.et_AddIngredientToRecipe);
         et_IngredientWeight = findViewById(R.id.et_IngredientWeight);
@@ -53,6 +50,9 @@ public class CustomRecipe extends AppCompatActivity {
             int quantity = Integer.parseInt(String.valueOf(et_IngredientWeight.getText()));
             IngredientForList ingredient = getIngredientByName(ingredientName, quantity);
             addIngredientToList(ingredient);
+            et_AddIngredientToRecipe.setText(null);
+            et_AddIngredientToRecipe.requestFocus();
+            et_IngredientWeight.setText(null);
         });
 
         btn_AddRecipe.setOnClickListener((v) ->{
@@ -71,6 +71,9 @@ public class CustomRecipe extends AppCompatActivity {
     }
 
     private void addRecipeToDatabase() {
+        SQLiteDatabase db = getSqLiteDatabase(true);
+
+
     }
 
     public IngredientForList getIngredientByName(String name, int quantity){

@@ -3,5 +3,12 @@
     <string-array name="measurements">
         <item>grams (g) </item>
         <item>millilitres (ml)</item>
+        <item>tablespoon(s)</item>
+        <item>teaspoon(s)</item>
+        <item>cup(s)</item>
+        <item>oz(s)</item>
+        <item>jar(s)</item>
+        <item>slice(s)</item>
+        <item>juiced</item>
     </string-array>
 </resources>

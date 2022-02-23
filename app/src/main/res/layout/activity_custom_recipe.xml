@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="827dp"
-        tools:context=".CustomRecipe"
-        tools:layout_editor_absoluteY="1dp">
+    android:layout_height="match_parent"
+    tools:context=".CustomRecipe">
 
         <TextView
             android:id="@+id/txt_RecipeTitle"
@@ -154,20 +149,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lst_IngredientsInRecipe" />
 
-        <Button
-            android:id="@+id/btn_AddRecipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+    <Button
+        android:id="@+id/btn_SaveRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Save Recipe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_RecipeDesc" />
 
-        <Button
+    <Button
             android:id="@+id/btn_AddIngToRecipe"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -188,4 +182,3 @@
             app:layout_constraintEnd_toEndOf="@+id/et_AddIngredientToRecipe"
             app:layout_constraintTop_toTopOf="@+id/et_IngredientWeight" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

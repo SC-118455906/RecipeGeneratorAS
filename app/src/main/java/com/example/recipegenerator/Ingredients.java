@@ -18,6 +18,8 @@ import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.User;
 import com.example.recipegenerator.models.IngredientForList;
 
+import java.util.ArrayList;
+
 public class Ingredients extends AppCompatActivity {
 
     ArrayAdapter arrayAdapter;
@@ -43,6 +45,7 @@ public class Ingredients extends AppCompatActivity {
         et_IngredientName = findViewById(R.id.et_CustIngredientName);
         et_quantity = findViewById(R.id.et_IngredientQuantity);
         lst_CurrentIngredients = findViewById(R.id.lst_CurrentIngredients);
+
 
         btn_IngToHome.setOnClickListener((v) -> {
             switchActivity(MainActivity.class);
@@ -78,11 +81,6 @@ public class Ingredients extends AppCompatActivity {
         getUsersCurrentIngredients(currentUser.getID());
     }
 
-//    private void addIngredientToList(Ingredient ingredient) {
-//        arrayAdapter = new ArrayAdapter<Ingredient>(Ingredients.this, android.R.layout.simple_list_item_1);
-//        arrayAdapter.add(ingredient);
-//        lst_CurrentIngredients.setAdapter(arrayAdapter);
-//    }
 
 
     private void deleteItem(int userID, int ingredientID){
