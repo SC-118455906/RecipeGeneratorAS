@@ -87,6 +87,7 @@ public class RecipeViewer extends AppCompatActivity {
             recipeDesc = cursor.getString(1);
         }
 
+        //set textview code adapted from this post on stackoverflow https://stackoverflow.com/questions/13452991/change-textview-text
         txt_RecipeName.setText(recipeName);
         et_RecipeDescription.setText(recipeDesc);
 

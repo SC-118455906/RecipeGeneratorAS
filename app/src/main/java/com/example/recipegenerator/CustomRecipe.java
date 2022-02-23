@@ -2,6 +2,7 @@ package com.example.recipegenerator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.recipegenerator.models.IngredientForList;
 import com.example.recipegenerator.models.User;
@@ -21,6 +23,7 @@ import java.util.List;
 public class CustomRecipe extends AppCompatActivity {
 
     protected static final String TAG = "CustomRecipe";
+    public static final String RECIPE = "RECIPE";
 
     EditText et_RecipeName, et_AddIngredientToRecipe, et_IngredientWeight, et_RecipeDesc;
     Button btn_AddRecipe, btn_AddIngToRecipe;
@@ -56,23 +59,55 @@ public class CustomRecipe extends AppCompatActivity {
         });
 
         btn_AddRecipe.setOnClickListener((v) ->{
-            ingredientsForList = new ArrayList<IngredientForList>();
-            for(int i =0; i < arrayAdapter.getCount(); i++){
-                IngredientForList ing = (IngredientForList) arrayAdapter.getItem(i);
-                ingredientsForList.add(ing);
+            //make sure all fields have been filled in
+            if(!arrayAdapter.isEmpty() || !nameIsEmpty() || !descIsEmpty()) {
+                //declaring the name and description
+                String recipeName = et_RecipeName.getText().toString();
+                String recipeDesc = et_RecipeDesc.getText().toString();
+
+                //getting the ingredients in an ArrayList
+                ingredientsForList = new ArrayList<IngredientForList>();
+                for (int i = 0; i < arrayAdapter.getCount(); i++) {
+                    IngredientForList ing = (IngredientForList) arrayAdapter.getItem(i);
+                    ingredientsForList.add(ing);
+                }
+
+                addRecipeToDatabase(recipeName, recipeDesc);
+            } else{
+                Toast.makeText(this, "One of more fields are blank. Please enter a name, ingredient list and description", Toast.LENGTH_SHORT).show();
             }
-            addRecipeToDatabase();
         });
     }
+
+    private boolean descIsEmpty() {
+        return et_RecipeDesc.getText().toString().trim().length() == 0;
+    }
+
+
+    private boolean nameIsEmpty() {
+        return et_RecipeName.getText().toString().trim().length() == 0;
+    }
+
 
     private void addIngredientToList(IngredientForList ingredient) {
         arrayAdapter.add(ingredient);
         lst_IngredientsInRecipe.setAdapter(arrayAdapter);
     }
 
-    private void addRecipeToDatabase() {
+    private void addRecipeToDatabase(String recipeName, String recipeDesc) {
         SQLiteDatabase db = getSqLiteDatabase(true);
 
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("NAME", recipeName);
+        contentValues.put("DESCRIPTION", recipeDesc);
+
+        long result = db.insert(RECIPE, null, contentValues);
+
+        if(result == -1){
+            Log.println(Log.INFO, TAG, "Could not write recipe to database please try again later");
+        } else {
+            Log.println(Log.INFO, TAG, "Successfully wrote recipe to database!");
+        }
 
     }
 
