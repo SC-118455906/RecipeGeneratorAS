@@ -29,7 +29,7 @@ public class Ingredients extends AppCompatActivity {
     ListView lst_CurrentIngredients;
     TestAdapter testAdapter;
 
-    User currentUser = new User(2, "Dan", "Murphy", "Coeliac", null);
+    User currentUser = new User(6, "Dan", "Murphy", "Coeliac", null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

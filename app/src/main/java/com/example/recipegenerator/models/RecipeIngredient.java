@@ -47,11 +47,6 @@ public class RecipeIngredient {
 
     @Override
     public String toString() {
-        return "RecipeIngredient{" +
-                "ingredientID=" + ingredientID +
-                ", ingredientName='" + ingredientName + '\'' +
-                ", quantity=" + quantity +
-                ", measurement='" + measurement + '\'' +
-                '}';
+        return "\u2022" + ingredientName + ", Quantity: " + quantity + " " + measurement;
     }
 }
