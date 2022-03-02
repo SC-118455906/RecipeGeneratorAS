@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.recipegenerator.models.IngredientForList;
 
@@ -67,6 +68,8 @@ public class RecipeViewer extends AppCompatActivity {
                 String ingredient = "\u2022" + name + ", Quantity: " + quantity + " " + measurement;
                 arrayAdapter.add(ingredient);
             } while(cursor.moveToNext());
+        } else{
+            Toast.makeText(this, "Error fetching recipe details. Please return to home screen and try again", Toast.LENGTH_SHORT).show();
         }
 
         db.close();
@@ -86,11 +89,14 @@ public class RecipeViewer extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             recipeName = cursor.getString(0);
             recipeDesc = cursor.getString(1);
+            txt_RecipeName.setText(recipeName);
+            et_RecipeDescription.setText(recipeDesc);
+        } else{
+            Toast.makeText(this, "Error fetching recipe details. Please try again later", Toast.LENGTH_SHORT).show();
         }
 
         //set textview code adapted from this post on stackoverflow https://stackoverflow.com/questions/13452991/change-textview-text
-        txt_RecipeName.setText(recipeName);
-        et_RecipeDescription.setText(recipeDesc);
+
 
         db.close();
     }

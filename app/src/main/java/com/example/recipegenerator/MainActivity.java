@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     View img_Profile;
     ListView lst_Users;
     ArrayAdapter arrayAdapter;
-    public int currentUserID = 6;
+    public int currentUserID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

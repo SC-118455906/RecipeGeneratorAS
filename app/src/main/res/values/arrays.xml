@@ -2,6 +2,7 @@
 <resources>
     <string-array name="measurements">
         <item>grams (g) </item>
+        <item>kilograms (kg) </item>
         <item>millilitres (ml)</item>
         <item>tablespoon(s)</item>
         <item>teaspoon(s)</item>

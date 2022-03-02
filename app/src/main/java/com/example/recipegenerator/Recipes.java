@@ -25,7 +25,6 @@ public class Recipes extends AppCompatActivity {
     Button btn_FindRecipes;
     ListView lst_Recipes;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

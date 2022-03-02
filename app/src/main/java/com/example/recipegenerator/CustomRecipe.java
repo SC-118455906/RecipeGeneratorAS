@@ -77,7 +77,7 @@ public class CustomRecipe extends AppCompatActivity {
 
         btn_AddRecipe.setOnClickListener((v) ->{
             //make sure all fields have been filled in
-            if(!ingredientsForDB.isEmpty() || !nameIsEmpty() || !descIsEmpty()) {
+            if(!ingredientsForDB.isEmpty() && !nameIsEmpty() && !descIsEmpty()) {
                 //declaring the name and description
                 String recipeName = et_RecipeName.getText().toString();
                 String recipeDesc = et_RecipeDesc.getText().toString();

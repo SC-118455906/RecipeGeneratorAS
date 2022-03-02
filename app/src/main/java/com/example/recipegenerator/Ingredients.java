@@ -13,20 +13,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.IngredientForList;
+import com.example.recipegenerator.models.RecipeIngredient;
 
 public class Ingredients extends AppCompatActivity {
 
     ArrayAdapter arrayAdapter;
+    ArrayAdapter<RecipeIngredient> ingredientsForDeleting;
 
     Button btn_IngToHome, btn_IngToCustIng, btn_Add;
     AutoCompleteTextView et_IngredientName;
     EditText et_quantity;
     ListView lst_CurrentIngredients;
     TestAdapter testAdapter;
+    Spinner sp_Measurements;
 
 
     @Override
@@ -43,13 +47,18 @@ public class Ingredients extends AppCompatActivity {
         et_quantity = findViewById(R.id.et_IngredientQuantity);
         lst_CurrentIngredients = findViewById(R.id.lst_CurrentIngredients);
         et_IngredientName = findViewById(R.id.et_IngredientName);
+        sp_Measurements = findViewById(R.id.sp_MeasurementIng);
 
+        //creating an ArrayAdapter for the autofill textbox
         ArrayAdapter<String> ingredients = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         getAllIngredients(ingredients);
         et_IngredientName.setAdapter(ingredients);
 
+        //getting the current users ID which was passed from the HomeScreen
         int userID = getUserID();
 
+
+        ingredientsForDeleting = new ArrayAdapter<>(Ingredients.this, android.R.layout.simple_list_item_1);
         //setting the button onClick methods
         btn_IngToHome.setOnClickListener((v) -> {
             switchActivity(MainActivity.class);
@@ -63,7 +72,8 @@ public class Ingredients extends AppCompatActivity {
             if (!nameIsEmpty() && !quantityIsEmpty()) {
                 String name = et_IngredientName.getText().toString().toUpperCase();
                 int quantity = Integer.parseInt(et_quantity.getText().toString());
-                addIngredient(name, userID, quantity);
+                String measurement = sp_Measurements.getSelectedItem().toString().toUpperCase();
+                addIngredient(name, userID, quantity, measurement);
                 clearText();
             } else {
                 Toast.makeText(this, "One or more fields are blank. Please enter a valid ingredient name and quantity", Toast.LENGTH_SHORT).show();
@@ -74,7 +84,7 @@ public class Ingredients extends AppCompatActivity {
         lst_CurrentIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                IngredientForList ingredient = (IngredientForList) parent.getItemAtPosition(position);
+                RecipeIngredient ingredient = ingredientsForDeleting.getItem(position);
                 deleteItem(userID, ingredient.getIngredientID());
                 getUsersCurrentIngredients(userID);
             }
@@ -107,10 +117,10 @@ public class Ingredients extends AppCompatActivity {
         db.close();
     }
 
-    private void addIngredient(String name, int userID, int quantity) {
-        Ingredient ingredient = testAdapter.getIngredientByName(name, quantity);
+    private void addIngredient(String name, int userID, int quantity, String measurement) {
+        Ingredient ingredient = testAdapter.getIngredientByName(name);
         if (ingredient != null) {
-            testAdapter.writeUser_Ingredients(ingredient, userID, quantity);
+            testAdapter.writeUser_Ingredients(ingredient, userID, quantity, measurement);
         } else {
             Toast.makeText(this, "Ingredient cannot be found in database. Please create this ingredient as a custom ingredient if you wish to add it to your list", Toast.LENGTH_SHORT).show();
         }
@@ -124,9 +134,9 @@ public class Ingredients extends AppCompatActivity {
         Cursor cursor = db.rawQuery(sql, null);
 
         if (cursor.moveToFirst()) {
-            Toast.makeText(this, "Successfully deleted item", Toast.LENGTH_SHORT).show();
-        } else {
             Toast.makeText(this, "Could not delete item. Please try again", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Successfully deleted item", Toast.LENGTH_SHORT).show();
         }
 
         //ensure the database is updated with the new information
@@ -141,7 +151,7 @@ public class Ingredients extends AppCompatActivity {
     }
 
     private void getUsersCurrentIngredients(int userID) {
-        String getUsersCurrentIngredientsFromDB = "SELECT INGREDIENTS.INGREDIENT_ID, INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + userID;
+        String getUsersCurrentIngredientsFromDB = "SELECT INGREDIENTS.INGREDIENT_ID, INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY, USER_INGREDIENTS.MEASUREMENT FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + userID;
 
         SQLiteDatabase db = getSqLiteDatabase(false);
         arrayAdapter = new ArrayAdapter<String>(Ingredients.this, android.R.layout.simple_list_item_1);
@@ -167,13 +177,16 @@ public class Ingredients extends AppCompatActivity {
         int ingredientID;
         String ingredientName;
         int ingredientQuantity;
+        String measurement;
         if (cursor.moveToFirst()) {
             do {
                 ingredientID = cursor.getInt(0);
                 ingredientName = cursor.getString(1);
                 ingredientQuantity = cursor.getInt(2);
+                measurement = cursor.getString(3);
 
-                IngredientForList ingredientForList = new IngredientForList(ingredientID, ingredientName, ingredientQuantity);
+                RecipeIngredient ingredientForList = new RecipeIngredient(ingredientID, ingredientName, ingredientQuantity, measurement);
+                ingredientsForDeleting.add(ingredientForList);
                 arrayAdapter.add(ingredientForList.toString());
 
             } while (cursor.moveToNext());

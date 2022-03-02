@@ -65,7 +65,7 @@ public class TestAdapter {
     }
 
 
-    public Ingredient getIngredientByName(String name, int quantity){
+    public Ingredient getIngredientByName(String name){
         Ingredient ingredient = null;
         try {
             String getIngredientFromDBSQL = "SELECT INGREDIENTS.INGREDIENT_ID, INGREDIENTS.NAME, FOODTYPE.TYPE FROM INGREDIENTS, FOODTYPE WHERE INGREDIENTS.TYPE = FOODTYPE.TYPE_ID AND UPPER(INGREDIENTS.NAME) = '" + name + "'";
@@ -91,13 +91,14 @@ public class TestAdapter {
         return ingredient;
     }
 
-    public void writeUser_Ingredients(Ingredient ingredient, int userID, int quantity){
+    public void writeUser_Ingredients(Ingredient ingredient, int userID, int quantity, String measurement){
         try {
             mDb = mDbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put("USER_ID", userID);
             contentValues.put("INGREDIENT_ID", ingredient.getIngredient_ID());
             contentValues.put("QUANTITY", quantity);
+            contentValues.put("MEASUREMENT", measurement);
 
             long result = mDb.insert("USER_INGREDIENTS", null, contentValues);
 
@@ -109,15 +110,6 @@ public class TestAdapter {
         } catch(NullPointerException e){
             Log.e(TAG, "ingredient passed to method is null: "+ e.toString());
             Toast.makeText(mContext, "Could not find this ingredient in the database. Please enter it as a custom ingredient if you wish to add it to your list", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void executeDatabaseQueryToWriteToUserIngredients(String writeUserIngToDatabase) {
-        try {
-            mDb.execSQL(writeUserIngToDatabase);
-            Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
-        } catch (SQLException e){
-            Log.println(Log.ERROR, TAG, "Error writing to User_Ingredients ==> " + e);
         }
     }
 }

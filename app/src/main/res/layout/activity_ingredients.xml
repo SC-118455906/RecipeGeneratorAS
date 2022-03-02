@@ -12,14 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="Add"
         app:backgroundTint="@android:color/holo_green_dark"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_IngredientQuantity" />
+        app:layout_constraintTop_toBottomOf="@+id/sp_MeasurementIng" />
 
     <Button
         android:id="@+id/btn_IngToCustIng"
@@ -53,15 +54,15 @@
 
     <ListView
         android:id="@+id/lst_CurrentIngredients"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_width="341dp"
+        android:layout_height="211dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.733"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_AddIngredient" />
 
@@ -90,5 +91,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/sp_MeasurementIng"
+        android:layout_width="376dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/measurements"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_IngredientQuantity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
