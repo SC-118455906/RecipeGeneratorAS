@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.User;
@@ -63,46 +64,6 @@ public class TestAdapter {
         mDbHelper.close();
     }
 
-    public List<UserIngredient> getTestData() {
-        List<UserIngredient> returnUsers = new ArrayList<>();
-        User currentUser = new User(6, "Dan", "Murphy", "Coeliac", null);
-        try {
-            String sql ="SELECT INGREDIENTS.NAME, USER_INGREDIENTS.QUANTITY FROM INGREDIENTS, USER_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = INGREDIENTS.INGREDIENT_ID AND USER_INGREDIENTS.USER_ID = " + currentUser.getID();
-            Cursor cursor = mDb.rawQuery(sql, null);
-            if(cursor.moveToFirst()){
-                do {
-                    String IngredientName = cursor.getString(0);
-                    int IngredientID = cursor.getInt(1);
-
-//                    UserIngredient userIngredients = new UserIngredient(UserID, IngredientID, quantity);
-//                    returnUsers.add(userIngredients);
-
-                } while(cursor.moveToNext());
-            } else {
-
-            }
-            cursor.close();
-            return returnUsers;
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
-            throw mSQLException;
-        }
-    }
-
-
-    public Cursor getUserIngredientData() {
-        try {
-            String sql ="SELECT * FROM INGREDIENTS";
-            Cursor cursor = mDb.rawQuery(sql, null);
-            if (cursor != null) {
-
-            }
-            return cursor;
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
-            throw mSQLException;
-        }
-    }
 
     public Ingredient getIngredientByName(String name, int quantity){
         Ingredient ingredient = null;
@@ -123,28 +84,32 @@ public class TestAdapter {
                 }
             }
         } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
-            throw mSQLException;
+            Log.e(TAG, "error getting ingredient from database"+ mSQLException.toString());
+            Toast.makeText(mContext, "Error finding ingredient", Toast.LENGTH_SHORT).show();
         }
 
         return ingredient;
     }
 
     public void writeUser_Ingredients(Ingredient ingredient, int userID, int quantity){
-        mDb = mDbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("USER_ID", userID);
-        contentValues.put("INGREDIENT_ID", ingredient.getIngredient_ID());
-        contentValues.put("QUANTITY", quantity);
+        try {
+            mDb = mDbHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("USER_ID", userID);
+            contentValues.put("INGREDIENT_ID", ingredient.getIngredient_ID());
+            contentValues.put("QUANTITY", quantity);
 
-        long result = mDb.insert("USER_INGREDIENTS", null, contentValues);
+            long result = mDb.insert("USER_INGREDIENTS", null, contentValues);
 
-        if(result == -1){
-            Log.println(Log.INFO, TAG, "didn't write users ingredient to db");
-        } else {
-            Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
+            if (result == -1) {
+                Log.println(Log.INFO, TAG, "didn't write users ingredient to db");
+            } else {
+                Log.println(Log.INFO, TAG, "Successfully wrote users ingredient to db");
+            }
+        } catch(NullPointerException e){
+            Log.e(TAG, "ingredient passed to method is null: "+ e.toString());
+            Toast.makeText(mContext, "Could not find this ingredient in the database. Please enter it as a custom ingredient if you wish to add it to your list", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void executeDatabaseQueryToWriteToUserIngredients(String writeUserIngToDatabase) {

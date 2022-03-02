@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,7 +20,6 @@ import android.widget.Toast;
 
 import com.example.recipegenerator.models.IngredientForList;
 import com.example.recipegenerator.models.RecipeIngredient;
-import com.example.recipegenerator.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +30,14 @@ public class CustomRecipe extends AppCompatActivity {
     public static final String RECIPE = "RECIPE";
     public static final String RECIPE_INGREDIENTS = "RECIPE_INGREDIENTS";
 
-    EditText et_RecipeName, et_AddIngredientToRecipe, et_IngredientWeight, et_RecipeDesc;
+    EditText et_RecipeName, et_IngredientWeight, et_RecipeDesc;
+    AutoCompleteTextView et_AddIngredientToRecipe;
     Button btn_AddRecipe, btn_AddIngToRecipe;
     ListView lst_IngredientsInRecipe;
     Spinner sp_Measurment;
     ArrayAdapter arrayForList;
     List<RecipeIngredient> ingredientsForDB = new ArrayList<RecipeIngredient>();
 
-    User currentUser = new User(1, "Sean", "Cronin", null, null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +56,23 @@ public class CustomRecipe extends AppCompatActivity {
 
         arrayForList = new ArrayAdapter<IngredientForList>(CustomRecipe.this, android.R.layout.simple_list_item_1);
 
-        btn_AddIngToRecipe.setOnClickListener((v) ->{
-            String ingredientName = et_AddIngredientToRecipe.getText().toString().toUpperCase();
-            int quantity = Integer.parseInt(String.valueOf(et_IngredientWeight.getText()));
-            String measurement = sp_Measurment.getSelectedItem().toString();
-            RecipeIngredient ingredient = getIngredientByName(ingredientName, quantity, measurement);
-            addIngredientToList(ingredient);
+        ArrayAdapter<String> ingredients = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        getAllIngredients(ingredients);
+        et_AddIngredientToRecipe.setAdapter(ingredients);
 
-            //clearing text and refocusing cursor
-            clearText();
+        btn_AddIngToRecipe.setOnClickListener((v) ->{
+            if(!ingredientIsEmpty() && !quantityIsEmpty()) {
+                String ingredientName = et_AddIngredientToRecipe.getText().toString().toUpperCase();
+                int quantity = Integer.parseInt(String.valueOf(et_IngredientWeight.getText()));
+                String measurement = sp_Measurment.getSelectedItem().toString();
+                RecipeIngredient ingredient = getIngredientByName(ingredientName, quantity, measurement);
+                addIngredientToList(ingredient);
+
+                //clearing text and refocusing cursor
+                clearText();
+            } else {
+                Toast.makeText(this, "Please enter valid input in both the ingredient name and quantity fields", Toast.LENGTH_SHORT).show();
+            }
         });
 
         btn_AddRecipe.setOnClickListener((v) ->{
@@ -76,9 +85,34 @@ public class CustomRecipe extends AppCompatActivity {
                 addRecipeToDatabase(recipeName, recipeDesc);
                 addRecipesIngredientsToDatabase(recipeName, ingredientsForDB);
             } else{
-                Toast.makeText(this, "One of more fields are blank. Please enter a name, ingredient list and description", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "One or more fields are blank. Please enter a name, ingredient list and description", Toast.LENGTH_SHORT).show();
             }
         });
+
+        lst_IngredientsInRecipe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String ingredient = (String) parent.getItemAtPosition(position);
+                arrayForList.remove(ingredient);
+                ingredientsForDB.remove(position);
+            }
+        });
+    }
+
+
+    private void getAllIngredients(ArrayAdapter<String> ingredients) {
+        String sql = "SELECT NAME FROM INGREDIENTS";
+        SQLiteDatabase db = getSqLiteDatabase(false);
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                ingredients.add(cursor.getString(0));
+            } while(cursor.moveToNext());
+        }
+
+        db.close();
     }
 
     private void addRecipesIngredientsToDatabase(String recipeName, List<RecipeIngredient> ingredientsForDB) {
@@ -137,11 +171,22 @@ public class CustomRecipe extends AppCompatActivity {
     private boolean nameIsEmpty() {
         return et_RecipeName.getText().toString().trim().length() == 0;
     }
+    private boolean quantityIsEmpty() {
+        return et_IngredientWeight.getText().toString().trim().length() == 0;
+    }
+    private boolean ingredientIsEmpty() {
+        return et_AddIngredientToRecipe.getText().toString().trim().length() == 0;
+    }
 
     private void addIngredientToList(RecipeIngredient ingredient) {
-        ingredientsForDB.add(ingredient);
-        arrayForList.add(ingredient.toString());
-        lst_IngredientsInRecipe.setAdapter(arrayForList);
+        try {
+            ingredientsForDB.add(ingredient);
+            arrayForList.add(ingredient.toString());
+            lst_IngredientsInRecipe.setAdapter(arrayForList);
+        } catch(NullPointerException e){
+            Log.e(TAG, "No value being passed to add ingredient to list: "+ e.toString());
+            Toast.makeText(this, "Cannot find this ingredient in the database. Please add it as a custom ingredient if you wish to continue", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addRecipeToDatabase(String recipeName, String recipeDesc) {
@@ -172,7 +217,7 @@ public class CustomRecipe extends AppCompatActivity {
             ingredient = getIngredientForList(quantity, ingredient, measurement, cursor);
         } catch (SQLException mSQLException) {
             Log.e(TAG, "error getting ingredient by name"+ mSQLException.toString());
-            throw mSQLException;
+            Toast.makeText(this, "Cannot find this ingredient in the database. Please add it as a custom ingredient if you wish to continue", Toast.LENGTH_SHORT).show();
         }
         db.close();
         return ingredient;
@@ -187,8 +232,8 @@ public class CustomRecipe extends AppCompatActivity {
                     ingredient = new RecipeIngredient(ingredientID, ingredientName, quantity, measurement);
                 } while(cursor.moveToNext());
             } else {
-
             }
+        } else {
         }
         return ingredient;
     }

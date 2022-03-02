@@ -1,10 +1,12 @@
 package com.example.recipegenerator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,11 +14,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.recipegenerator.models.Ingredient;
-import com.example.recipegenerator.models.User;
 import com.example.recipegenerator.models.UserIngredient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
+import com.google.android.material.navigation.NavigationBarMenuView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,30 +26,20 @@ public class MainActivity extends AppCompatActivity {
     EditText et_Fname, et_Sname, et_Allergens;
     View img_Profile;
     ListView lst_Users;
-//    DatabaseHelper databaseHelper;
     ArrayAdapter arrayAdapter;
-    public int CurrentUserID = 1;
-
-    public int getCurrentUserID() {
-        return CurrentUserID;
-    }
-
-    public void setCurrentUserID(int currentUserID) {
-        CurrentUserID = currentUserID;
-    }
+    public int currentUserID = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
-//        mDbHelper.createDatabase();
-//        mDbHelper.open();
-//
-//        mDbHelper.close();
+        TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
+        mDbHelper.createDatabase();
+        mDbHelper.open();
 
-//        showAllUsersInListView();
+        mDbHelper.close();
+
         btn_GoToIngredients = findViewById(R.id.btn_GoToIngredients);
         btn_GoToCustomRecipe = findViewById(R.id.btn_GoToCustomRecipe);
         btn_GoToCustomIng = findViewById(R.id.btn_GoToCustomIng);
@@ -57,93 +48,54 @@ public class MainActivity extends AppCompatActivity {
         et_Allergens = findViewById(R.id.et_Allergens);
         BottomNavigationView bottomNavigationView = new BottomNavigationView(MainActivity.this);
 
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.MainActivity:
+//                        switchActivity(MainActivity.class, currentUserID);
+//                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.Ingredients:
+                        switchActivity(Ingredients.class, currentUserID);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.FindRecipes:
+                        switchActivity(MainActivity.class, currentUserID);
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
 
-//        bottomNavigationView.setOnItemSelectedListener(OnItemSelectedListener listener);{ item ->
-//                when(item.itemId) {
-//            R.id.item1 -> {
-//                // Respond to navigation item 1 click
-//                true
-//            }
-//            R.id.item2 -> {
-//                // Respond to navigation item 2 click
-//                true
-//            }
-//        else -> false
-//        }
-//        }
-
-//        showTablesInDatabase();
-//        showAllUsersInListView();
-//        showIngredientsInListView();
-
-        //listeners
-//        btn_Add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                User user = null;
-//                try {
-//                    user = new User(-1, et_Fname.getText().toString(), et_Sname.getText().toString(), et_Allergens.getText().toString());
-//                    Toast.makeText(MainActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
-//                } catch (Exception e) {
-//                    Toast.makeText(MainActivity.this, "Error Creating customer", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                boolean success = databaseHelper.addOne(user);
-//
-////                showAllUsersInListView();
-//                showIngredientsInListView();
-//            }
-//        });
-
-
-//        btn_ViewAll.setOnClickListener((v) -> {
-//
-
-//        });
 
         btn_GoToIngredients.setOnClickListener((v) -> {
-            switchActivity(Ingredients.class);
+            switchActivity(Ingredients.class, currentUserID);
         });
 
         btn_GoToCustomRecipe.setOnClickListener((v) -> {
-            switchActivity(CustomRecipe.class);
+            switchActivity(CustomRecipe.class, currentUserID);
         });
 
         btn_GoToCustomIng.setOnClickListener((v)->{
-            switchActivity(CustomIngredient.class);
+            switchActivity(CustomIngredient.class, currentUserID);
         });
 
         btn_GoToRecipes.setOnClickListener((v)->{
-            switchActivity(Recipes.class);
+            switchActivity(Recipes.class, currentUserID);
         });
 
         img_Profile.setOnClickListener((v -> {
-            switchActivity(CreateProfile.class);
+            switchActivity(CreateProfile.class, currentUserID);
         }));
-    }
-//
-//    private void showTablesInDatabase() {
-//        boolean success = databaseHelper.checkTables();
-//    }
-//
-//    private void showIngredientsInListView() {
-//        arrayAdapter = new ArrayAdapter<Ingredient>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getIngredients());
-//        lst_Users.setAdapter(arrayAdapter);
-//    }
-//
-    private void showAllUsersInListView() {
-        TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
-        mDbHelper.open();
-        arrayAdapter = new ArrayAdapter<UserIngredient>(MainActivity.this,
-                android.R.layout.simple_list_item_1,
-                mDbHelper.getTestData());
-        lst_Users.setAdapter(arrayAdapter);
     }
 
     //code for swapping between activites came from this tutorial: https://learntodroid.com/how-to-switch-between-activities-in-android/
-    private void switchActivity(Class _class) {
-//        Intent switchActivityIntent = new Intent(this, Ingredients.class);
+    private void switchActivity(Class _class, int currentUserID) {
         Intent switchActivityIntent = new Intent(this, _class);
+        switchActivityIntent.putExtra("userID", currentUserID);
         startActivity(switchActivityIntent);
     }
 }

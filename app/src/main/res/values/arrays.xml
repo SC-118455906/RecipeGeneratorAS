@@ -10,5 +10,9 @@
         <item>jar(s)</item>
         <item>slice(s)</item>
         <item>juiced</item>
+        <item>bottle(s)</item>
+        <item>tin(s)</item>
+        <item>cloves</item>
+        <item>whole</item>
     </string-array>
 </resources>

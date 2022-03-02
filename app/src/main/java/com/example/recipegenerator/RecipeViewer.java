@@ -22,6 +22,7 @@ public class RecipeViewer extends AppCompatActivity {
     Button btn_Home;
     ArrayAdapter arrayAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

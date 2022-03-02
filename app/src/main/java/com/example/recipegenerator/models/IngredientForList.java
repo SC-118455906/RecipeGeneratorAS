@@ -40,10 +40,6 @@ public class IngredientForList {
 
     @Override
     public String toString() {
-        return "IngredientForList{" +
-                "ingredientID=" + ingredientID +
-                ", ingredientName='" + ingredientName + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return "\u2022" + ingredientName + ", Quantity: " + quantity;
     }
 }

@@ -25,7 +25,6 @@ public class Recipes extends AppCompatActivity {
     Button btn_FindRecipes;
     ListView lst_Recipes;
 
-    User currentUser = new User(1, "Dan", "Murphy", "Coeliac", null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +34,22 @@ public class Recipes extends AppCompatActivity {
         btn_FindRecipes = findViewById(R.id.btn_FindRecipes);
         lst_Recipes = findViewById(R.id.lstRecipes);
 
+        int userID = getUserID();
+
         btn_FindRecipes.setOnClickListener((v)->{
-            findAllEligibleRecipes(currentUser.getID());
+            findAllEligibleRecipes(userID);
         });
 
         lst_Recipes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String recipeName = lst_Recipes.getItemAtPosition(position).toString().toUpperCase();
-                getRecipeDetails(recipeName);
+                getRecipeDetails(recipeName, userID);
             }
         });
     }
 
-    private void getRecipeDetails(String recipeName) {
+    private void getRecipeDetails(String recipeName, int userID) {
         String sql = "SELECT RECIPE_ID FROM RECIPE WHERE UPPER(NAME) = '" + recipeName + "'";
         SQLiteDatabase db = getSqLiteDatabase(false);
 
@@ -60,7 +61,7 @@ public class Recipes extends AppCompatActivity {
         }
 
         if(id!=0){
-            switchActivity(RecipeViewer.class, id);
+            switchActivity(RecipeViewer.class, id, userID);
         }
 
         db.close();
@@ -111,10 +112,22 @@ public class Recipes extends AppCompatActivity {
         return db;
     }
 
-    private void switchActivity(Class _class, int id) {
+    private int getUserID() {
+        int userID = 0;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("userID");
+        }
+
+        return userID;
+    }
+
+    private void switchActivity(Class _class, int id, int userID) {
         //code for swapping between Activites was taken from this tutorial https://learntodroid.com/how-to-switch-between-activities-in-android/
         Intent switchActivityIntent = new Intent(this, _class);
         switchActivityIntent.putExtra("recipeID", id);
+        switchActivityIntent.putExtra("userID", userID);
         startActivity(switchActivityIntent);
     }
 }

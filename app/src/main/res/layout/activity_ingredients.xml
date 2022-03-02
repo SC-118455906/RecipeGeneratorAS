@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Ingredients">
 
-    <EditText
-        android:id="@+id/et_CustIngredientName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="@string/IngredientName"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btn_AddIngredient"
         android:layout_width="0dp"
@@ -44,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="Create Custom Ingredient"
@@ -71,7 +54,7 @@
     <ListView
         android:id="@+id/lst_CurrentIngredients"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="40dp"
@@ -96,6 +79,16 @@
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_CustIngredientName" />
+        app:layout_constraintTop_toBottomOf="@+id/et_IngredientName" />
+
+    <AutoCompleteTextView
+        android:id="@+id/et_IngredientName"
+        android:layout_width="377dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/IngredientName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

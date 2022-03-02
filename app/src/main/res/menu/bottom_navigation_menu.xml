@@ -23,10 +23,5 @@
         android:enabled="true"
         android:icon="@drawable/ic_write_svgrepo_com"
         android:title="@string/ic_customRecipe" />
-    <item
-        android:id="@+id/Calendar"
-        android:enabled="true"
-        android:icon="@drawable/ic_calendar"
-        android:title="@string/ic_calendar" />
 
 </menu>
