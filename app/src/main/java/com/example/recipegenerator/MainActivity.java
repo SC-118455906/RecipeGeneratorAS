@@ -34,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //checks if the database exists in the current device. If not it will copy it from the assets folder
+        //to the data folder for the device
         TestAdapter mDbHelper = new TestAdapter(MainActivity.this);
         mDbHelper.createDatabase();
         mDbHelper.open();
-
         mDbHelper.close();
 
         btn_GoToIngredients = findViewById(R.id.btn_GoToIngredients);

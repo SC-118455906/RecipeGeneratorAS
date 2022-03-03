@@ -38,12 +38,50 @@ public class CreateProfile extends AppCompatActivity {
         et_Allergens.setVisibility(View.INVISIBLE);
 
 
-        btn_AddUser.setOnClickListener((v)->{
-
-            ContentValues contentValues =  getUserInformation();
-            addUserToDb(contentValues);
-
+        btn_AddUser.setOnClickListener((v) -> {
+            if (!fNameEmpty() && !sNameEmpty() && !emailEmpty() && !dobEmpty() && !passEmpty() && !cPassEmpty()) {
+                ContentValues contentValues = getUserInformation();
+                addUserToDb(contentValues);
+                clearText();
+            } else {
+                Toast.makeText(this, "One or more fields are blank. Please enter valid values", Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    private void clearText() {
+        et_FirstName.setText(null);
+        et_FirstName.requestFocus();
+        et_Surname.setText(null);
+        et_EmailAddress.setText(null);
+        et_DOB.setText(null);
+        et_Password.setText(null);
+        et_ConfirmPassword.setText(null);
+        et_Allergens.setText(null);
+    }
+
+    private boolean fNameEmpty() {
+        return et_FirstName.getText().toString().trim().length() == 0;
+    }
+
+    private boolean sNameEmpty() {
+        return et_Surname.getText().toString().trim().length() == 0;
+    }
+
+    private boolean emailEmpty() {
+        return et_EmailAddress.getText().toString().trim().length() == 0;
+    }
+
+    private boolean dobEmpty() {
+        return et_DOB.getText().toString().trim().length() == 0;
+    }
+
+    private boolean passEmpty() {
+        return et_Password.getText().toString().trim().length() == 0;
+    }
+
+    private boolean cPassEmpty() {
+        return et_ConfirmPassword.getText().toString().trim().length() == 0;
     }
 
     private ContentValues getUserInformation() {
@@ -69,7 +107,7 @@ public class CreateProfile extends AppCompatActivity {
     private void writeToDB(ContentValues contentValues, SQLiteDatabase db, String tableName) {
         try {
             db.insert(tableName, null, contentValues);
-        } catch (SQLiteException e){
+        } catch (SQLiteException e) {
             Toast.makeText(this, "error writing customer to db -> " + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -77,7 +115,7 @@ public class CreateProfile extends AppCompatActivity {
     private SQLiteDatabase getSqLiteDatabase(boolean writable) {
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(CreateProfile.this);
-        if(writable){
+        if (writable) {
             db = dbHelper.getWritableDatabase();
         } else {
             db = dbHelper.getReadableDatabase();
