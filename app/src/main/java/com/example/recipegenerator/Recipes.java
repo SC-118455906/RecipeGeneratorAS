@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.example.recipegenerator.models.User;
@@ -24,6 +26,8 @@ public class Recipes extends AppCompatActivity {
 
     Button btn_FindRecipes;
     ListView lst_Recipes;
+    CheckBox chk_AllOrSome;
+    boolean allIngredients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +36,29 @@ public class Recipes extends AppCompatActivity {
 
         btn_FindRecipes = findViewById(R.id.btn_FindRecipes);
         lst_Recipes = findViewById(R.id.lstRecipes);
+        chk_AllOrSome = findViewById(R.id.chk_AllOrSome);
 
+        boolean isVegan = getIsVegan();
+        boolean isVegetarian = getIsVegetarian();
         int userID = getUserID();
+        allIngredients = false;
 
-        btn_FindRecipes.setOnClickListener((v)->{
-            findAllEligibleRecipes(userID);
+
+        chk_AllOrSome.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                allIngredients = true;
+            } else{
+                allIngredients = false;
+            }
         });
 
-        lst_Recipes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String recipeName = lst_Recipes.getItemAtPosition(position).toString().toUpperCase();
-                getRecipeDetails(recipeName, userID);
-            }
+        btn_FindRecipes.setOnClickListener((v) -> {
+            findAllEligibleRecipes(userID, isVegetarian, isVegan);
+        });
+
+        lst_Recipes.setOnItemClickListener((parent, view, position, id) -> {
+            String recipeName = lst_Recipes.getItemAtPosition(position).toString().toUpperCase();
+            getRecipeDetails(recipeName, userID);
         });
     }
 
@@ -59,15 +73,59 @@ public class Recipes extends AppCompatActivity {
             id = cursor.getInt(0);
         }
 
-        if(id!=0){
+        if (id != 0) {
             switchActivity(RecipeViewer.class, id, userID);
         }
 
         db.close();
     }
 
-    private void findAllEligibleRecipes(int userID) {
-        String sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID;
+    private void findAllEligibleRecipes(int userID, boolean isVegetarian, boolean isVegan) {
+        String sql;
+        if (allIngredients) {
+            if (isVegetarian) {
+                sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
+                        "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
+                        " WHERE NOT EXISTS\n" +
+                        "        (SELECT *\n" +
+                        "           FROM RECIPE_INGREDIENTS AS RI2\n" +
+                        "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
+                        "            AND RI2.INGREDIENT_ID\n" +
+                        "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
+                        "                          FROM USER_INGREDIENTS AS UI2\n" +
+                        "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ") AND R.ALLERGENS LIKE '%VEGETARIAN%'";
+            } else if (isVegan) {
+                sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
+                        "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
+                        " WHERE NOT EXISTS\n" +
+                        "        (SELECT *\n" +
+                        "           FROM RECIPE_INGREDIENTS AS RI2\n" +
+                        "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
+                        "            AND RI2.INGREDIENT_ID\n" +
+                        "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
+                        "                          FROM USER_INGREDIENTS AS UI2\n" +
+                        "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ") AND R.ALLERGENS LIKE '%VEGAN%'";
+            } else {
+                sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
+                        "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
+                        " WHERE NOT EXISTS\n" +
+                        "        (SELECT *\n" +
+                        "           FROM RECIPE_INGREDIENTS AS RI2\n" +
+                        "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
+                        "            AND RI2.INGREDIENT_ID\n" +
+                        "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
+                        "                          FROM USER_INGREDIENTS AS UI2\n" +
+                        "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ")";
+            }
+        } else {
+            if (isVegetarian) {
+                sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGETARIAN%'";
+            } else if (isVegan) {
+                sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGAN%'";
+            } else {
+                sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID;
+            }
+        }
         SQLiteDatabase db = getSqLiteDatabase(false);
         List<String> recipes = new ArrayList<String>();
 
@@ -86,16 +144,16 @@ public class Recipes extends AppCompatActivity {
     }
 
     private void addRecipesToArrayList(List<String> recipes, Cursor cursor) {
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             try {
-                do{
+                do {
                     String name = cursor.getString(0);
                     recipes.add(name);
-                } while(cursor.moveToNext());
-            } catch (Exception e){
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
                 Log.println(Log.ERROR, TAG, e.toString());
             }
-        } else{
+        } else {
             recipes.add("You do not have sufficient ingredients at the moment to make any recipes. Please update your ingredients list!");
         }
     }
@@ -103,7 +161,7 @@ public class Recipes extends AppCompatActivity {
     private SQLiteDatabase getSqLiteDatabase(boolean writable) {
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(Recipes.this);
-        if(writable){
+        if (writable) {
             db = dbHelper.getWritableDatabase();
         } else {
             db = dbHelper.getReadableDatabase();
@@ -120,6 +178,28 @@ public class Recipes extends AppCompatActivity {
         }
 
         return userID;
+    }
+
+    private boolean getIsVegetarian() {
+        boolean isVegetarian = false;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isVegetarian = extras.getBoolean("veggie");
+        }
+
+        return isVegetarian;
+    }
+
+    private boolean getIsVegan() {
+        boolean isVegan = false;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isVegan = extras.getBoolean("vegan");
+        }
+
+        return isVegan;
     }
 
     private void switchActivity(Class _class, int id, int userID) {

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.UserIngredient;
@@ -27,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
     View img_Profile;
     ListView lst_Users;
     ArrayAdapter arrayAdapter;
-    public int currentUserID = 1;
+    public int currentUserID = 6;
+    boolean isVegetarian;
+    boolean isVegan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         img_Profile = findViewById(R.id.img_Profile);
         et_Allergens = findViewById(R.id.et_Allergens);
         BottomNavigationView bottomNavigationView = new BottomNavigationView(MainActivity.this);
+
+        isVegetarian = checkIfVeggie();
+        isVegan = checkIfVegan();
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_GoToRecipes.setOnClickListener((v)->{
-            switchActivity(Recipes.class, currentUserID);
+            switchToRecipe(Recipes.class, currentUserID, isVegan, isVegetarian);
         });
 
         img_Profile.setOnClickListener((v -> {
@@ -99,4 +107,63 @@ public class MainActivity extends AppCompatActivity {
         switchActivityIntent.putExtra("userID", currentUserID);
         startActivity(switchActivityIntent);
     }
+
+    private void switchToRecipe(Class _class, int currentUserID, boolean isVegan, boolean isVegetarian) {
+        Intent switchActivityIntent = new Intent(this, _class);
+        switchActivityIntent.putExtra("userID", currentUserID);
+        switchActivityIntent.putExtra("vegan", isVegan);
+        switchActivityIntent.putExtra("veggie", isVegetarian);
+        startActivity(switchActivityIntent);
+    }
+
+    private boolean checkIfVeggie() {
+        String vegetarian = "VEGETARIAN";
+        String sql = "SELECT ALLERGENS FROM USER WHERE ID = " + currentUserID;
+
+        SQLiteDatabase db = getSqLiteDatabase(false);
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if(cursor.moveToFirst()){
+            String allergens = cursor.getString(0);
+            if(allergens != null && allergens.toUpperCase().contains(vegetarian)){
+                return isVegetarian = true;
+            } else{
+                return isVegetarian = false;
+            }
+        } else {
+            return isVegetarian = false;
+        }
+    }
+    private boolean checkIfVegan() {
+        String vegan = "VEGAN";
+        String sql = "SELECT ALLERGENS FROM USER WHERE ID = " + currentUserID;
+
+        SQLiteDatabase db = getSqLiteDatabase(false);
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if(cursor.moveToFirst()){
+            String allergens = cursor.getString(0);
+            if(allergens != null && allergens.toUpperCase().contains(vegan)){
+                return isVegan = true;
+            } else{
+                return isVegan = false;
+            }
+        } else {
+            return isVegan = false;
+        }
+    }
+
+    private SQLiteDatabase getSqLiteDatabase(boolean writable) {
+        SQLiteDatabase db;
+        DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
+        if (writable) {
+            db = dbHelper.getWritableDatabase();
+        } else {
+            db = dbHelper.getReadableDatabase();
+        }
+        return db;
+    }
+
 }
