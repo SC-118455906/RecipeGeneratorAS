@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -37,7 +38,10 @@ public class CustomRecipe extends AppCompatActivity {
     Spinner sp_Measurment;
     ArrayAdapter arrayForList;
     List<RecipeIngredient> ingredientsForDB = new ArrayList<RecipeIngredient>();
+    CheckBox chk_Veggie, chk_Vegan;
 
+    boolean isVeggie;
+    boolean isVegan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +57,33 @@ public class CustomRecipe extends AppCompatActivity {
         btn_AddIngToRecipe = findViewById(R.id.btn_AddIngToRecipe);
         lst_IngredientsInRecipe = findViewById(R.id.lst_IngredientsInRecipe);
         sp_Measurment = findViewById(R.id.sp_Measurement);
+        chk_Veggie = findViewById(R.id.chk_CustVegetarian);
+        chk_Vegan = findViewById(R.id.chk_CustVegan);
 
         arrayForList = new ArrayAdapter<IngredientForList>(CustomRecipe.this, android.R.layout.simple_list_item_1);
 
         ArrayAdapter<String> ingredients = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         getAllIngredients(ingredients);
         et_AddIngredientToRecipe.setAdapter(ingredients);
+
+        isVeggie = false;
+        isVegan = false;
+
+        chk_Veggie.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isVeggie = true;
+            } else {
+                isVeggie = false;
+            }
+        });
+
+        chk_Vegan.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isVegan = true;
+            } else {
+                isVegan = false;
+            }
+        });
 
         btn_AddIngToRecipe.setOnClickListener((v) ->{
             if(!ingredientIsEmpty() && !quantityIsEmpty()) {
@@ -81,8 +106,8 @@ public class CustomRecipe extends AppCompatActivity {
                 //declaring the name and description
                 String recipeName = et_RecipeName.getText().toString();
                 String recipeDesc = et_RecipeDesc.getText().toString();
-
-                addRecipeToDatabase(recipeName, recipeDesc);
+                String allergens = checkCheckBoxes();
+                addRecipeToDatabase(recipeName, recipeDesc, allergens);
                 addRecipesIngredientsToDatabase(recipeName, ingredientsForDB);
             } else{
                 Toast.makeText(this, "One or more fields are blank. Please enter a name, ingredient list and description", Toast.LENGTH_SHORT).show();
@@ -97,6 +122,20 @@ public class CustomRecipe extends AppCompatActivity {
                 ingredientsForDB.remove(position);
             }
         });
+    }
+
+    private String checkCheckBoxes() {
+        String allergens = "";
+        if(isVeggie && !isVegan){
+            allergens = "VEGETARIAN";
+        } else if(isVeggie && isVegan){
+            allergens = "VEGETARIAN,VEGAN";
+        } else if(isVegan && !isVeggie){
+            allergens = "VEGAN";
+        } else{
+            allergens = "";
+        }
+        return allergens;
     }
 
 
@@ -189,12 +228,13 @@ public class CustomRecipe extends AppCompatActivity {
         }
     }
 
-    private void addRecipeToDatabase(String recipeName, String recipeDesc) {
+    private void addRecipeToDatabase(String recipeName, String recipeDesc, String allergens) {
         SQLiteDatabase db = getSqLiteDatabase(true);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("NAME", recipeName);
         contentValues.put("DESCRIPTION", recipeDesc);
+        contentValues.put("ALLERGENS", allergens);
 
         long result = db.insert(RECIPE, null, contentValues);
 

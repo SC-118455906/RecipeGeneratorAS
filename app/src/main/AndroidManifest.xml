@@ -9,12 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeGenerator">
-        <activity android:name=".RecipeViewer"></activity>
-        <activity android:name=".Recipes" />
-        <activity android:name=".CreateProfile" />
-        <activity android:name=".CustomRecipe" />
-        <activity android:name=".CustomIngredient" />
-        <activity android:name=".Ingredients" />
+        <activity android:name=".RecipeViewer" android:parentActivityName=".Recipes"></activity>
+        <activity android:name=".Recipes" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".CreateProfile" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".CustomRecipe" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".CustomIngredient" android:parentActivityName=".MainActivity" />
+        <activity android:name=".Ingredients" android:parentActivityName=".MainActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

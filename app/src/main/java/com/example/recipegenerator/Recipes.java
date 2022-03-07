@@ -26,8 +26,8 @@ public class Recipes extends AppCompatActivity {
 
     Button btn_FindRecipes;
     ListView lst_Recipes;
-    CheckBox chk_AllOrSome;
-    boolean allIngredients;
+    CheckBox chk_AllOrSome, chk_Vegetarian, chk_Vegan;
+    boolean allIngredients, isVegetarian, isVegan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +37,36 @@ public class Recipes extends AppCompatActivity {
         btn_FindRecipes = findViewById(R.id.btn_FindRecipes);
         lst_Recipes = findViewById(R.id.lstRecipes);
         chk_AllOrSome = findViewById(R.id.chk_AllOrSome);
+        chk_Vegetarian = findViewById(R.id.chkVegetarian);
+        chk_Vegan = findViewById(R.id.chk_Vegan);
 
-        boolean isVegan = getIsVegan();
-        boolean isVegetarian = getIsVegetarian();
+        isVegetarian = getIsVegetarian();
+        isVegan = getIsVegan();
         int userID = getUserID();
         allIngredients = false;
 
 
         chk_AllOrSome.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
+            if (isChecked) {
                 allIngredients = true;
-            } else{
+            } else {
                 allIngredients = false;
+            }
+        });
+
+        chk_Vegetarian.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isVegetarian = true;
+            } else {
+                isVegetarian = false;
+            }
+        });
+
+        chk_Vegan.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isVegan = true;
+            } else {
+                isVegan = false;
             }
         });
 
@@ -84,16 +102,29 @@ public class Recipes extends AppCompatActivity {
         String sql;
         if (allIngredients) {
             if (isVegetarian) {
-                sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
-                        "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
-                        " WHERE NOT EXISTS\n" +
-                        "        (SELECT *\n" +
-                        "           FROM RECIPE_INGREDIENTS AS RI2\n" +
-                        "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
-                        "            AND RI2.INGREDIENT_ID\n" +
-                        "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
-                        "                          FROM USER_INGREDIENTS AS UI2\n" +
-                        "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ") AND R.ALLERGENS LIKE '%VEGETARIAN%'";
+                if (isVegan) {
+                    sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
+                            "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
+                            " WHERE NOT EXISTS\n" +
+                            "        (SELECT *\n" +
+                            "           FROM RECIPE_INGREDIENTS AS RI2\n" +
+                            "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
+                            "            AND RI2.INGREDIENT_ID\n" +
+                            "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
+                            "                          FROM USER_INGREDIENTS AS UI2\n" +
+                            "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ") AND R.ALLERGENS LIKE '%VEGETARIAN%' OR '%VEGAN%'";
+                } else {
+                    sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
+                            "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
+                            " WHERE NOT EXISTS\n" +
+                            "        (SELECT *\n" +
+                            "           FROM RECIPE_INGREDIENTS AS RI2\n" +
+                            "          WHERE RI2.RECIPE_ID = RI1.RECIPE_ID\n" +
+                            "            AND RI2.INGREDIENT_ID\n" +
+                            "                NOT IN (SELECT UI2.INGREDIENT_ID\n" +
+                            "                          FROM USER_INGREDIENTS AS UI2\n" +
+                            "                         WHERE UI2.USER_ID = UI1.USER_ID)) AND UI1.USER_ID = " + userID + ") AND R.ALLERGENS LIKE '%VEGETARIAN%'";
+                }
             } else if (isVegan) {
                 sql = "SELECT R.NAME, R.DESCRIPTION FROM RECIPE AS R WHERE R.RECIPE_ID IN (SELECT DISTINCT RI1.RECIPE_ID\n" +
                         "FROM RECIPE_INGREDIENTS AS RI1, USER_INGREDIENTS AS UI1\n" +
@@ -119,7 +150,11 @@ public class Recipes extends AppCompatActivity {
             }
         } else {
             if (isVegetarian) {
-                sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGETARIAN%'";
+                if (isVegan) {
+                    sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGETARIAN%' OR '%VEGAN%'";
+                } else {
+                    sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGETARIAN%'";
+                }
             } else if (isVegan) {
                 sql = "SELECT DISTINCT(RECIPE.NAME),(RECIPE.DESCRIPTION) FROM RECIPE, USER_INGREDIENTS, RECIPE_INGREDIENTS WHERE USER_INGREDIENTS.INGREDIENT_ID = RECIPE_INGREDIENTS.INGREDIENT_ID AND RECIPE.RECIPE_ID = RECIPE_INGREDIENTS.RECIPE_ID AND USER_INGREDIENTS.USER_ID = " + userID + " AND RECIPE.ALLERGENS LIKE '%VEGAN%'";
             } else {
