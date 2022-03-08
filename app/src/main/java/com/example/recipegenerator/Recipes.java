@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.recipegenerator.models.User;
 
@@ -26,7 +28,9 @@ public class Recipes extends AppCompatActivity {
 
     Button btn_FindRecipes;
     ListView lst_Recipes;
-    CheckBox chk_AllOrSome, chk_Vegetarian, chk_Vegan;
+    CheckBox chk_Vegetarian, chk_Vegan;
+    RadioGroup rg_AllOrSome;
+    RadioButton radioButton, rb_Some, rb_All;
     boolean allIngredients, isVegetarian, isVegan;
 
     @Override
@@ -36,24 +40,19 @@ public class Recipes extends AppCompatActivity {
 
         btn_FindRecipes = findViewById(R.id.btn_FindRecipes);
         lst_Recipes = findViewById(R.id.lstRecipes);
-        chk_AllOrSome = findViewById(R.id.chk_AllOrSome);
+        rg_AllOrSome = findViewById(R.id.rg_AllOrSome);
+        rb_Some = findViewById(R.id.rb_Some);
+        rb_All = findViewById(R.id.rb_All);
         chk_Vegetarian = findViewById(R.id.chkVegetarian);
         chk_Vegan = findViewById(R.id.chk_Vegan);
 
+        //setting the variables
         isVegetarian = getIsVegetarian();
         isVegan = getIsVegan();
         int userID = getUserID();
         allIngredients = false;
 
-
-        chk_AllOrSome.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                allIngredients = true;
-            } else {
-                allIngredients = false;
-            }
-        });
-
+        //onclick listeners for the checkboxes, buttons, and listview
         chk_Vegetarian.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 isVegetarian = true;
@@ -80,6 +79,7 @@ public class Recipes extends AppCompatActivity {
         });
     }
 
+    //gets the recipe id of the currently selected recipe so it can be passed to the recipe viewer page
     private void getRecipeDetails(String recipeName, int userID) {
         String sql = "SELECT RECIPE_ID FROM RECIPE WHERE UPPER(NAME) = '" + recipeName + "'";
         SQLiteDatabase db = getSqLiteDatabase(false);
@@ -204,6 +204,7 @@ public class Recipes extends AppCompatActivity {
         return db;
     }
 
+    //gets the currently logged in users ID
     private int getUserID() {
         int userID = 0;
 
@@ -215,6 +216,7 @@ public class Recipes extends AppCompatActivity {
         return userID;
     }
 
+    //this method checks whether or not the current users profile has marked them as a vegetarian or not
     private boolean getIsVegetarian() {
         boolean isVegetarian = false;
 
@@ -226,6 +228,7 @@ public class Recipes extends AppCompatActivity {
         return isVegetarian;
     }
 
+    //this method checks whether or not the current users profile has marked them as a vegan or not
     private boolean getIsVegan() {
         boolean isVegan = false;
 
@@ -243,5 +246,16 @@ public class Recipes extends AppCompatActivity {
         switchActivityIntent.putExtra("recipeID", id);
         switchActivityIntent.putExtra("userID", userID);
         startActivity(switchActivityIntent);
+    }
+
+    //was able to follow this tutorial for getting my radio buttons set up correctly: https://www.youtube.com/watch?v=fwSJ1OkK304
+    public void checkRadioButton(View view) {
+        int radioId = rg_AllOrSome.getCheckedRadioButtonId();
+        radioButton = findViewById(radioId);
+        if (radioButton == rb_Some) {
+            allIngredients = false;
+        } else {
+            allIngredients = true;
+        }
     }
 }

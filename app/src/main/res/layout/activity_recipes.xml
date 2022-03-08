@@ -12,7 +12,7 @@
         android:layout_height="66dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="192dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="Find Recipes"
@@ -27,20 +27,20 @@
         android:layout_height="438dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.592"
+        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_FindRecipes">
 
     </ListView>
 
     <CheckBox
-        android:id="@+id/chk_AllOrSome"
+        android:id="@+id/chkVegetarian"
         android:layout_width="333dp"
         android:layout_height="38dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="44dp"
         android:layout_marginRight="44dp"
-        android:text="Recipes which I have all ingredients only"
+        android:text="Vegetarian recipes only"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,22 +48,37 @@
         android:id="@+id/chk_Vegan"
         android:layout_width="333dp"
         android:layout_height="38dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="144dp"
         android:layout_marginEnd="44dp"
         android:layout_marginRight="44dp"
         android:text="Vegan recipes only"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/chkVegetarian"
+    <RadioGroup
+        android:id="@+id/rg_AllOrSome"
         android:layout_width="333dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Vegetarian recipes only"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="77dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/chkVegetarian"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/chkVegetarian"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/rb_Some"
+            android:layout_width="333dp"
+            android:layout_height="38dp"
+            android:checked="true"
+            android:text="Recipes for which you have some ingredients"
+            android:onClick="checkRadioButton"/>
+
+        <RadioButton
+            android:id="@+id/rb_All"
+            android:layout_width="333dp"
+            android:layout_height="38dp"
+            android:text="Recipes for which you have all ingredients"
+            android:onClick="checkRadioButton"/>
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
