@@ -1,13 +1,18 @@
 package com.example.recipegenerator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +20,8 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class RecipeViewer extends AppCompatActivity {
 
@@ -31,6 +38,7 @@ public class RecipeViewer extends AppCompatActivity {
     Float newRating = Float.valueOf(0);
     Float existingRating;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +69,24 @@ public class RecipeViewer extends AppCompatActivity {
             switchActivity(MainActivity.class);
         });
 
+        //was able to get this code from the following StackOverflow post
+        //https://stackoverflow.com/questions/24428808/how-to-scroll-the-edittext-inside-the-scrollview
+        //it allows the user to scroll through the description textbox without scrolling down on the page
+        et_RecipeDescription.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+
+                if (view.getId() == R.id.et_RecipeDescription) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction()&MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_UP:
+                            view.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
         btn_Save.setOnClickListener((v) -> {
             Toast.makeText(this, String.valueOf(newRating), Toast.LENGTH_SHORT).show();
             if (newRating != existingRating) {
@@ -81,7 +107,6 @@ public class RecipeViewer extends AppCompatActivity {
         arrayAdapter = getIngredients(recipeID);
 
         lst_RecipeIngredients.setAdapter(arrayAdapter);
-
     }
 
 

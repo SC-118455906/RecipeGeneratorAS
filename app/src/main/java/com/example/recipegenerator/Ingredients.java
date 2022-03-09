@@ -1,11 +1,13 @@
 package com.example.recipegenerator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,18 +21,20 @@ import android.widget.Toast;
 import com.example.recipegenerator.models.Ingredient;
 import com.example.recipegenerator.models.IngredientForList;
 import com.example.recipegenerator.models.RecipeIngredient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Ingredients extends AppCompatActivity {
 
     ArrayAdapter arrayAdapter;
     ArrayAdapter<RecipeIngredient> ingredientsForDeleting;
 
-    Button btn_IngToHome, btn_IngToCustIng, btn_Add;
+    Button btn_IngToCustIng, btn_Add;
     AutoCompleteTextView et_IngredientName;
     EditText et_quantity;
     ListView lst_CurrentIngredients;
     TestAdapter testAdapter;
     Spinner sp_Measurements;
+    BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -41,13 +45,13 @@ public class Ingredients extends AppCompatActivity {
         testAdapter = new TestAdapter(Ingredients.this);
         testAdapter.open();
 
-        btn_IngToHome = findViewById(R.id.btn_IngToHome);
         btn_Add = findViewById(R.id.btn_AddIngredient);
         btn_IngToCustIng = findViewById(R.id.btn_IngToCustIng);
         et_quantity = findViewById(R.id.et_IngredientQuantity);
         lst_CurrentIngredients = findViewById(R.id.lst_CurrentIngredients);
         et_IngredientName = findViewById(R.id.et_IngredientName);
         sp_Measurements = findViewById(R.id.sp_MeasurementIng);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //creating an ArrayAdapter for the autofill textbox
         ArrayAdapter<String> ingredients = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -60,12 +64,9 @@ public class Ingredients extends AppCompatActivity {
 
         ingredientsForDeleting = new ArrayAdapter<>(Ingredients.this, android.R.layout.simple_list_item_1);
         //setting the button onClick methods
-        btn_IngToHome.setOnClickListener((v) -> {
-            switchActivity(MainActivity.class);
-        });
 
         btn_IngToCustIng.setOnClickListener((v) -> {
-            switchActivity(CustomIngredient.class);
+            switchActivity(CustomIngredient.class, userID);
         });
 
         btn_Add.setOnClickListener((v) -> {
@@ -94,6 +95,27 @@ public class Ingredients extends AppCompatActivity {
         //Is called on creation to populate list view. Is also called whenever a new ingredient is added to
         //or deleted from the listview
         getUsersCurrentIngredients(userID);
+
+        bottomNavigationView.setSelectedItemId(R.id.Ingredients);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.MainActivity:
+                        switchActivity(MainActivity.class, 0);
+                        break;
+                    case R.id.Ingredients:
+                        break;
+                    case R.id.FindRecipes:
+                        switchActivity(Recipes.class, userID);
+                        break;
+                    case R.id.CustomRecipe:
+                        switchActivity(CustomRecipe.class, userID);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void clearText() {
@@ -143,10 +165,11 @@ public class Ingredients extends AppCompatActivity {
         db.close();
     }
 
-    private void switchActivity(Class _class) {
+    private void switchActivity(Class _class, int userID) {
         testAdapter.close();
         //code for swapping between Activites was taken from this tutorial https://learntodroid.com/how-to-switch-between-activities-in-android/
         Intent switchActivityIntent = new Intent(this, _class);
+        switchActivityIntent.putExtra("userID", userID);
         startActivity(switchActivityIntent);
     }
 

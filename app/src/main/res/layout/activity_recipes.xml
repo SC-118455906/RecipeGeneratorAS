@@ -1,65 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Recipes">
-
-    <Button
-        android:id="@+id/btn_FindRecipes"
-        android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="192dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Find Recipes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ListView
-        android:id="@+id/lstRecipes"
-        android:layout_width="366dp"
-        android:layout_height="438dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_FindRecipes">
-
-    </ListView>
-
-    <CheckBox
-        android:id="@+id/chkVegetarian"
-        android:layout_width="333dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Vegetarian recipes only"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Recipes"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBox
         android:id="@+id/chk_Vegan"
         android:layout_width="333dp"
         android:layout_height="38dp"
-        android:layout_marginTop="144dp"
         android:layout_marginEnd="44dp"
         android:layout_marginRight="44dp"
         android:text="Vegan recipes only"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/chkVegetarian" />
+
+    <CheckBox
+        android:id="@+id/chkVegetarian"
+        android:layout_width="333dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginRight="44dp"
+        android:text="Vegetarian recipes only"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rg_AllOrSome" />
 
     <RadioGroup
         android:id="@+id/rg_AllOrSome"
-        android:layout_width="333dp"
-        android:layout_height="77dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="338dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/chkVegetarian"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/chkVegetarian"
@@ -68,17 +39,64 @@
         <RadioButton
             android:id="@+id/rb_Some"
             android:layout_width="333dp"
-            android:layout_height="38dp"
+            android:layout_height="35dp"
             android:checked="true"
-            android:text="Recipes for which you have some ingredients"
-            android:onClick="checkRadioButton"/>
+            android:onClick="checkRadioButton"
+            android:text="Recipes for which you have some ingredients" />
 
         <RadioButton
             android:id="@+id/rb_All"
             android:layout_width="333dp"
-            android:layout_height="38dp"
-            android:text="Recipes for which you have all ingredients"
-            android:onClick="checkRadioButton"/>
+            android:layout_height="35dp"
+            android:onClick="checkRadioButton"
+            android:text="Recipes for which you have all ingredients" />
+
+        <RadioButton
+            android:id="@+id/rb_AllRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:checked="false"
+            android:onClick="checkRadioButton"
+            android:text="Show all Recipes" />
     </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_FindRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Find Recipes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chk_Vegan" />
+
+    <ListView
+        android:id="@+id/lstRecipes"
+        android:layout_width="351dp"
+        android:layout_height="351dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_FindRecipes"
+        app:layout_constraintVertical_bias="0.0">
+
+    </ListView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation_menu"
+        app:backgroundTint="#90EE90"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

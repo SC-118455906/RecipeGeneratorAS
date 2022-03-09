@@ -1,13 +1,16 @@
 package com.example.recipegenerator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.recipegenerator.models.IngredientForList;
 import com.example.recipegenerator.models.RecipeIngredient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,7 @@ public class CustomRecipe extends AppCompatActivity {
     ArrayAdapter arrayForList;
     List<RecipeIngredient> ingredientsForDB = new ArrayList<RecipeIngredient>();
     CheckBox chk_Veggie, chk_Vegan;
+    BottomNavigationView bottomNavigationView;
 
     boolean isVeggie;
     boolean isVegan;
@@ -59,6 +64,9 @@ public class CustomRecipe extends AppCompatActivity {
         sp_Measurment = findViewById(R.id.sp_Measurement);
         chk_Veggie = findViewById(R.id.chk_CustVegetarian);
         chk_Vegan = findViewById(R.id.chk_CustVegan);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        int userID = getUserID();
 
         arrayForList = new ArrayAdapter<IngredientForList>(CustomRecipe.this, android.R.layout.simple_list_item_1);
 
@@ -120,6 +128,27 @@ public class CustomRecipe extends AppCompatActivity {
                 String ingredient = (String) parent.getItemAtPosition(position);
                 arrayForList.remove(ingredient);
                 ingredientsForDB.remove(position);
+            }
+        });
+
+        bottomNavigationView.setSelectedItemId(R.id.CustomRecipe);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.MainActivity:
+                        switchActivity(MainActivity.class, 0);
+                        break;
+                    case R.id.Ingredients:
+                        switchActivity(MainActivity.class, userID);
+                        break;
+                    case R.id.FindRecipes:
+                        switchActivity(Recipes.class, userID);
+                        break;
+                    case R.id.CustomRecipe:
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -287,5 +316,24 @@ public class CustomRecipe extends AppCompatActivity {
             db = dbHelper.getReadableDatabase();
         }
         return db;
+    }
+
+    private void switchActivity(Class _class, int userID) {
+        //code for swapping between Activites was taken from this tutorial https://learntodroid.com/how-to-switch-between-activities-in-android/
+        Intent switchActivityIntent = new Intent(this, _class);
+        switchActivityIntent.putExtra("userID", userID);
+        startActivity(switchActivityIntent);
+    }
+
+    //gets the currently logged in users ID
+    private int getUserID() {
+        int userID = 0;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("userID");
+        }
+
+        return userID;
     }
 }

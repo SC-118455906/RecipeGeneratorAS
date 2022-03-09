@@ -3,6 +3,7 @@ package com.example.recipegenerator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     View img_Profile;
     ListView lst_Users;
     ArrayAdapter arrayAdapter;
+    BottomNavigationView bottomNavigationView;
     public int currentUserID = 1;
     boolean isVegetarian;
     boolean isVegan;
@@ -52,33 +54,30 @@ public class MainActivity extends AppCompatActivity {
         btn_GoToRecipes = findViewById(R.id.btn_GoToRecipes);
         img_Profile = findViewById(R.id.img_Profile);
         et_Allergens = findViewById(R.id.et_Allergens);
-        BottomNavigationView bottomNavigationView = new BottomNavigationView(MainActivity.this);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         isVegetarian = checkIfVeggie();
         isVegan = checkIfVegan();
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        //code for bottom nav bar adapted from this tutorial: https://stackoverflow.com/questions/54228079/bottom-navigation-menu-onclick-icon-select
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId())
-                {
-                    case R.id.MainActivity:
-//                        switchActivity(MainActivity.class, currentUserID);
-//                        overridePendingTransition(0,0);
-                        return true;
+                switch (item.getItemId()){
+                    case R.id.MainActivity: break;
                     case R.id.Ingredients:
                         switchActivity(Ingredients.class, currentUserID);
-                        overridePendingTransition(0,0);
-                        return true;
+                        break;
                     case R.id.FindRecipes:
-                        switchActivity(MainActivity.class, currentUserID);
-                        overridePendingTransition(0,0);
-                        return true;
+                        switchActivity(Recipes.class, currentUserID);
+                        break;
+                    case R.id.CustomRecipe:
+                        switchActivity(CustomRecipe.class, currentUserID);
+                        break;
                 }
-                return false;
+                return true;
             }
         });
-
 
         btn_GoToIngredients.setOnClickListener((v) -> {
             switchActivity(Ingredients.class, currentUserID);
