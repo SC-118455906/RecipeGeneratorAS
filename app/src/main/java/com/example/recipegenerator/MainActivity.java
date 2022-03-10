@@ -2,6 +2,7 @@ package com.example.recipegenerator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -32,12 +33,13 @@ public class MainActivity extends AppCompatActivity {
     ListView lst_Users;
     ArrayAdapter arrayAdapter;
     BottomNavigationView bottomNavigationView;
-    public int currentUserID = 1;
+    public int currentUserID = 3;
     boolean isVegetarian;
     boolean isVegan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

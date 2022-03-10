@@ -117,6 +117,7 @@ public class CustomRecipe extends AppCompatActivity {
                 String allergens = checkCheckBoxes();
                 addRecipeToDatabase(recipeName, recipeDesc, allergens);
                 addRecipesIngredientsToDatabase(recipeName, ingredientsForDB);
+                clearAllText();
             } else{
                 Toast.makeText(this, "One or more fields are blank. Please enter a name, ingredient list and description", Toast.LENGTH_SHORT).show();
             }
@@ -140,7 +141,7 @@ public class CustomRecipe extends AppCompatActivity {
                         switchActivity(MainActivity.class, 0);
                         break;
                     case R.id.Ingredients:
-                        switchActivity(MainActivity.class, userID);
+                        switchActivity(Ingredients.class, userID);
                         break;
                     case R.id.FindRecipes:
                         switchActivity(Recipes.class, userID);
@@ -151,6 +152,16 @@ public class CustomRecipe extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void clearAllText() {
+        et_RecipeName.setText(null);
+        et_AddIngredientToRecipe.setText(null);
+        et_IngredientWeight.setText(null);
+        et_RecipeDesc.setText(null);
+        arrayForList.clear();
+        ingredientsForDB.clear();
+        Toast.makeText(this, "Recipe Saved!", Toast.LENGTH_SHORT).show();
     }
 
     private String checkCheckBoxes() {
