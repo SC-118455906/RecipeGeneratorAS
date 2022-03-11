@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--was able to use code found from this tutorial to change the look of my scroll bar: https://stackoverflow.com/questions/20782499/how-can-i-change-the-width-thickness-of-a-scrollbar-->
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    android:fadeScrollbars="false"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbarSize="5dp"
+    android:scrollbarThumbVertical="@color/grey"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeViewer">
+
+    <TextView
+        android:id="@+id/txt_RecipesName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="RecipeName"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_RecipeDescription"
+        android:layout_width="256dp"
+        android:layout_height="310dp"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="none"
+        android:overScrollMode="always"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/grey"
+        app:layout_constraintEnd_toEndOf="@+id/lst_RecipesIngredients"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/lst_RecipesIngredients"
+        app:layout_constraintTop_toBottomOf="@+id/lst_RecipesIngredients" />
+
+    <ListView
+        android:id="@+id/lst_RecipesIngredients"
+        android:layout_width="258dp"
+        android:layout_height="194dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginRight="68dp"
+        android:nestedScrollingEnabled="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbVertical="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_RecipesName" />
+
+    <Button
+        android:id="@+id/btn_RVToHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="24dp"
+        android:text="Home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.777"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_RecipeDescription" />
+
+    <RatingBar
+        android:id="@+id/rb_RecipeReview"
+        android:layout_width="239dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_RecipeDescription" />
+
+    <Button
+        android:id="@+id/btn_Save"
+        android:layout_width="126dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
+        android:text="Save/Update Review"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_RVToHome"
+        app:layout_constraintEnd_toStartOf="@+id/btn_RVToHome"
+        app:layout_constraintTop_toBottomOf="@+id/et_RecipeDescription"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/ic_ingredients"
+        app:layout_constraintBottom_toTopOf="@+id/lst_RecipesIngredients"
+        app:layout_constraintStart_toStartOf="@+id/lst_RecipesIngredients" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Method"
+        app:layout_constraintBottom_toTopOf="@+id/et_RecipeDescription"
+        app:layout_constraintStart_toStartOf="@+id/et_RecipeDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

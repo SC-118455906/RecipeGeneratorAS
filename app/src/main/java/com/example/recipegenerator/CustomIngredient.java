@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class CustomIngredient extends AppCompatActivity {
 
@@ -33,11 +34,9 @@ public class CustomIngredient extends AppCompatActivity {
         btn_ToHome = findViewById(R.id.btn_CustomIngToHome);
         btn_AddCustomIngredient = findViewById(R.id.btn_AddCustomIngredient);
         et_CustIngName = findViewById(R.id.et_CustIngredientName);
+
         sp_FoodTypes = findViewById(R.id.sp_FoodTypes);
-
         arrayAdapter = getAllFoodTypes();
-
-
         //https://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
         sp_FoodTypes.setAdapter(arrayAdapter);
 
@@ -46,12 +45,22 @@ public class CustomIngredient extends AppCompatActivity {
         }));
 
         btn_AddCustomIngredient.setOnClickListener((v -> {
-            String ingredientName = et_CustIngName.getText().toString().toUpperCase();
-            String foodType = sp_FoodTypes.getSelectedItem().toString().toUpperCase();
-            addCustomIngredientToDatabase(ingredientName, foodType);
+            if(!nameIsEmpty()) {
+                String ingredientName = et_CustIngName.getText().toString().toUpperCase();
+                String foodType = sp_FoodTypes.getSelectedItem().toString().toUpperCase();
+                addCustomIngredientToDatabase(ingredientName, foodType);
+                clearText();
+            } else{
+                Toast.makeText(this, "Error writing ingredient to database. Please enter a valid ingredient name", Toast.LENGTH_SHORT).show();
+            }
         }));
 
 
+    }
+
+    private void clearText() {
+        et_CustIngName.setText(null);
+        et_CustIngName.requestFocus();
     }
 
     private ArrayAdapter getAllFoodTypes() {
@@ -129,4 +138,10 @@ public class CustomIngredient extends AppCompatActivity {
         }
         return db;
     }
+
+    private boolean nameIsEmpty() {
+        //https://stackoverflow.com/questions/6290531/how-do-i-check-if-my-edittext-fields-are-empty
+        return et_CustIngName.getText().toString().trim().length() == 0;
+    }
 }
+

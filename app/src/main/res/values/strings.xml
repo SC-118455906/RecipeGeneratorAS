@@ -2,7 +2,7 @@
     <string name="app_name">RecipeGenerator</string>
     <string name="FirstName">First Name:</string>
     <string name="Surname">Surname:</string>
-    <string name="Allergens">Allergens</string>
+    <string name="Allergens">Allergens/Dietary Requirements</string>
     <string name="Quantity">Quantity</string>
     <string name="IngredientName">Ingredient Name</string>
     <string name="RecipeName">e.g. Turkey Burger</string>

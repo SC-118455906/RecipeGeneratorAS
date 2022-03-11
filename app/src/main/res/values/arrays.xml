@@ -2,6 +2,23 @@
 <resources>
     <string-array name="measurements">
         <item>grams (g) </item>
+        <item>kilograms (kg) </item>
         <item>millilitres (ml)</item>
+        <item>tablespoon(s)</item>
+        <item>teaspoon(s)</item>
+        <item>cup(s)</item>
+        <item>oz(s)</item>
+        <item>jar(s)</item>
+        <item>slice(s)</item>
+        <item>strips(s)</item>
+        <item>fillet(s)</item>
+        <item>handful</item>
+        <item>bunch(es)</item>
+        <item>juiced</item>
+        <item>bottle(s)</item>
+        <item>tin(s)</item>
+        <item>cloves</item>
+        <item>whole</item>
+        <item>egg(s)</item>
     </string-array>
 </resources>

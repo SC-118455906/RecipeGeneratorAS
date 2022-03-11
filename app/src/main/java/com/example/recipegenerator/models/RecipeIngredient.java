@@ -1,17 +1,24 @@
 package com.example.recipegenerator.models;
 
-public class IngredientForList {
+public class RecipeIngredient {
     private int ingredientID;
     private String ingredientName;
     private int quantity;
+    private String measurement;
 
-    public IngredientForList() {
-    }
-
-    public IngredientForList(int ingredientID, String ingredientName, int quantity) {
+    public RecipeIngredient(int ingredientID, String ingredientName, int quantity, String measurement) {
         this.ingredientID = ingredientID;
         this.ingredientName = ingredientName;
         this.quantity = quantity;
+        this.measurement = measurement;
+    }
+
+    public int getIngredientID() {
+        return ingredientID;
+    }
+
+    public void setIngredientID(int ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
     public String getIngredientName() {
@@ -30,16 +37,16 @@ public class IngredientForList {
         this.quantity = quantity;
     }
 
-    public int getIngredientID() {
-        return ingredientID;
+    public String getMeasurement() {
+        return measurement;
     }
 
-    public void setIngredientID(int ingredientID) {
-        this.ingredientID = ingredientID;
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
     @Override
     public String toString() {
-        return "\u2022" + ingredientName + ", Quantity: " + quantity;
+        return "\u2022" + ingredientName + ", Quantity: " + quantity + " " + measurement;
     }
 }
