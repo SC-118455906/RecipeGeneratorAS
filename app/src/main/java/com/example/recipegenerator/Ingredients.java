@@ -201,6 +201,7 @@ public class Ingredients extends AppCompatActivity {
         String ingredientName;
         int ingredientQuantity;
         String measurement;
+        ingredientsForDeleting.clear();
         if (cursor.moveToFirst()) {
             do {
                 ingredientID = cursor.getInt(0);

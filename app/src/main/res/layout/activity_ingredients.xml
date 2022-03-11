@@ -95,6 +95,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_menu"
-        app:backgroundTint="#90EE90"/>
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:backgroundTint="?colorPrimaryVariant"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--was able to use code found from this tutorial to change the look of my scroll bar: https://stackoverflow.com/questions/20782499/how-can-i-change-the-width-thickness-of-a-scrollbar-->
 <androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"

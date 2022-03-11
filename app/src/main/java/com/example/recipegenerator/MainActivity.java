@@ -27,11 +27,8 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
 
     //references to controls in the layout
-    Button btn_ViewAll, btn_Add, btn_GoToIngredients, btn_GoToCustomRecipe, btn_GoToCustomIng, btn_GoToRecipes;
-    EditText et_Fname, et_Sname, et_Allergens;
+    Button btn_GoToIngredients, btn_GoToCustomRecipe, btn_GoToRecipes;
     View img_Profile;
-    ListView lst_Users;
-    ArrayAdapter arrayAdapter;
     BottomNavigationView bottomNavigationView;
     public int currentUserID = 3;
     boolean isVegetarian;
@@ -52,10 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         btn_GoToIngredients = findViewById(R.id.btn_GoToIngredients);
         btn_GoToCustomRecipe = findViewById(R.id.btn_GoToCustomRecipe);
-        btn_GoToCustomIng = findViewById(R.id.btn_GoToCustomIng);
         btn_GoToRecipes = findViewById(R.id.btn_GoToRecipes);
         img_Profile = findViewById(R.id.img_Profile);
-        et_Allergens = findViewById(R.id.et_Allergens);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         isVegetarian = checkIfVeggie();
@@ -87,10 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
         btn_GoToCustomRecipe.setOnClickListener((v) -> {
             switchActivity(CustomRecipe.class, currentUserID);
-        });
-
-        btn_GoToCustomIng.setOnClickListener((v)->{
-            switchActivity(CustomIngredient.class, currentUserID);
         });
 
         btn_GoToRecipes.setOnClickListener((v)->{

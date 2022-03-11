@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_recipe_svgrepo_com"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_recipe_svgrepo_com"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeGenerator">
         <activity android:name=".RecipeViewer" android:parentActivityName=".MainActivity"></activity>
@@ -24,4 +24,5 @@
         </activity>
     </application>
 
+<!--    Icons by svgrepo.com-->
 </manifest>
