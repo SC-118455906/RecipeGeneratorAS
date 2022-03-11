@@ -4,6 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
+    android:fadeScrollbars="false"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbarSize="5dp"
+    android:scrollbarThumbVertical="@color/grey"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -136,6 +140,11 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="true"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@color/grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.478"
             app:layout_constraintStart_toStartOf="parent"
@@ -153,6 +162,8 @@
             android:hint="@string/RecipeDesc"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:overScrollMode="always"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lst_IngredientsInRecipe" />
 

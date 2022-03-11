@@ -88,7 +88,6 @@ public class RecipeViewer extends AppCompatActivity {
         });
 
         btn_Save.setOnClickListener((v) -> {
-            Toast.makeText(this, String.valueOf(newRating), Toast.LENGTH_SHORT).show();
             if (newRating != existingRating) {
                 saveRating(userID, recipeID, newRating);
             }

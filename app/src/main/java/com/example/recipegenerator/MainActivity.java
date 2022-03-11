@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_GoToIngredients, btn_GoToCustomRecipe, btn_GoToRecipes;
     View img_Profile;
     BottomNavigationView bottomNavigationView;
-    public int currentUserID = 3;
+    public int currentUserID = 1;
     boolean isVegetarian;
     boolean isVegan;
 

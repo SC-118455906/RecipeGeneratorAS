@@ -76,6 +76,14 @@ public class Ingredients extends AppCompatActivity {
                 String measurement = sp_Measurements.getSelectedItem().toString().toUpperCase();
                 addIngredient(name, userID, quantity, measurement);
                 clearText();
+//                for (int i = 0; i <ingredientsForDeleting.getCount(); i++){
+//                    if(name == (ingredientsForDeleting.getItem(i).getIngredientName())){
+//                        Toast.makeText(this, "You have already added this ingredient to your list", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    } else{
+//
+//                    }
+//                }
             } else {
                 Toast.makeText(this, "One or more fields are blank. Please enter a valid ingredient name and quantity", Toast.LENGTH_SHORT).show();
             }
