@@ -20,6 +20,35 @@ Copyright holder: https://www.svgrepo.com/page/licensing
 Links: https://www.svgrepo.com/svg/80215/carrot, https://www.svgrepo.com/svg/163525/write, and https://www.svgrepo.com/svg/276548/recipe
 LocalPath: /res/drawable/ic_carrot_svgrepo_com.xml, /res/drawable/ic_write_svgrepo_com.xml, /res/drawable/ic_recipe_svgrepo_com.xml
 
+Initial set-up and database querying:
+https://www.youtube.com/watch?v=312RhjfetP8
+
+Connecting to database:
+https://stackoverflow.com/questions/9109438/how-to-use-an-existing-database-with-an-android-application/9109728#9109728
+
+Checking if fields are empty:
+https://stackoverflow.com/questions/6290531/how-do-i-check-if-my-edittext-fields-are-empty
+
+Set text:
+https://stackoverflow.com/questions/13452991/change-textview-text
+
+Bottom navigation bar:
+https://stackoverflow.com/questions/54228079/bottom-navigation-menu-onclick-icon-select
+
+Switching activities:
+https://learntodroid.com/how-to-switch-between-activities-in-android/
+
+Dropdown list:
+https://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
+
+Radio buttons tutorial:
+https://www.youtube.com/watch?v=fwSJ1OkK304
+
+Scrolling within ScrollView:
+https://stackoverflow.com/questions/24428808/how-to-scroll-the-edittext-inside-the-scrollview
+
+Rating Bar:
+https://abhiandroid.com/ui/ratingbar
 
 MODIFIED THIRD PARTY FILES
 I modified the foods.csv file to remove some unnecessary columns and rename the food types to what I wanted.
